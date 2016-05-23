@@ -2,6 +2,7 @@
 session_start();
 require_once("./Model/MainModel.php");
 require_once("./Controller/MainController.php");
+MainController::initRouter();
 $w = new Tinggi(".","Page Test");
 ?>
 <!DOCTYPE html>

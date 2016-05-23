@@ -13,7 +13,7 @@
        * @param $class string Le nom de la classe à charger.
        */
       static function autoload($class){
-          require 'class/' . $class . '.php';
+          require str_replace('\\',DIRECTORY_SEPARATOR,$class).'.php';
       }
 
   }

@@ -1,5 +1,7 @@
 <?php
-  class Tinggi{
+namespace model;
+
+  class MainModel{
 
     private $title;
     private $icon;

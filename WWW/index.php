@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once("./Model/MainModel.php");
-require_once("./Controller/MainController.php");
+require_once("./Controller/Autoloader.php");
 $w = new Tinggi(".","Page Test");
 ?>
 <!DOCTYPE html>

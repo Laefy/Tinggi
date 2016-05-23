@@ -1,7 +1,11 @@
 <?php
+use controller\MainController as MainController;
+use model\MainModel as MainModel;
 session_start();
 require_once("./Controller/Autoloader.php");
-$w = new Tinggi(".","Page Test");
+Autoloader::register();
+MainController::initRouter();
+$w = new MainModel(".","Page Test");
 ?>
 <!DOCTYPE html>
 <html>

@@ -3,7 +3,7 @@ namespace controller;
 
   class Main{
 
-    private var $datas = array();
+    private $datas = array();
 
     static function initWeb(){
         session_start();

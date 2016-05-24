@@ -1,12 +1,8 @@
 <?php
+
   class Router{
-    private static var $correspondancePage = array(
-                                          'index' =>  ,
-                                          'lolilol' => ,
-                                        );
-    private static var $correspondanceControl = array(
-                                          'index' =>  ,
-                                          'lolilol' =>
+    private static $correspondanceControl = array(
+                                          'Match' => 'controller\PostController'
                                         );
 
 
@@ -17,10 +13,10 @@
 
     static function redirection($pageToLoad){
       $param = explode('/',$pageToLoad);
-      if(count($param)>1){
+      if(!empty($param[1])){
         $controller = $param[0];
-        if(array_key_exists($controller, $correspondanceControl)){
-          $controller = new $correspondanceControl[$controller];
+        if(array_key_exists($controller, Router::$correspondanceControl)){
+          $controller = new Router::$correspondanceControl[$controller];
           if(method_exists($controller, $param[1]))
           {
             if(count($param)>2){
@@ -37,8 +33,8 @@
       }
       else if (!empty($param[0])){
         $controller = $param[0];
-        if(array_key_exists($controller, $correspondanceControl)){
-          $controller = new $correspondanceControl[$controller];
+        if(array_key_exists($controller, Router::$correspondanceControl)){
+          $controller = new Router::$correspondanceControl[$controller];
           if(method_exists($controller, 'index'))
           {
               $controller->index();

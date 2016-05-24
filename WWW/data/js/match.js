@@ -11,7 +11,7 @@ function selectWinner(element) {
 	ajaxRequest('Post/selectWinner/' + parameter, action);
 }
 
-function generateNewMatch() {
+function makeNewMatch() {
 	var action = function(response) {
 		// Parser la réponse pour afficher les deux nouveaux posts.
 	}

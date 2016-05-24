@@ -1,19 +1,6 @@
 <?php
-use controller\MainController as MainController;
-use model\MainModel as MainModel;
-session_start();
-require_once("./Controller/Autoloader.php");
+include 'Router.php';
+require 'controller/Autoloader.php';
 Autoloader::register();
-MainController::initRouter();
-$w = new MainModel(".","Page Test");
+Router::redirection($_GET['p']);
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-	<?php $w->buildHeader(); ?>
-	</head>
-	<body onresize="resize()">
-		<div class="bloc_page">Kikou
-		</div>
-	</body>
-</html>

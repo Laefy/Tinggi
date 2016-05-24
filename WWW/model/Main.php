@@ -17,13 +17,5 @@ namespace model;
       $this->style = "main.css";
     }
 
-    public function buildHeader(){
-        echo
-        '<link rel="stylesheet" href="',$this->dir,'css/',$this->style,'"/>
-        <link rel="icon" type="image/x-png" href="',$this->dir,'data/img/',$this->icon,'" />
-        <!--<meta charset="',$this->encoding,'"/>-->
-        <title>',$this->title,'</title>';
-    }
-
   }
  ?>

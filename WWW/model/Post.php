@@ -7,8 +7,8 @@ class Post {
   private $time;
   private $author;
   private $comments;
-
-  public function __construct($id, $type, $title, $desc, $time, $author) {
+  private $score;
+  public function __construct($id, $type, $title, $desc, $time, $author, $comment, $score) {
      $this->id = $id;
      $this->type = $type;
      $this->title = $title;
@@ -16,6 +16,7 @@ class Post {
      $this->time = $time;
      $this->author = $author;
      $this->comments = array();
+     $this->score = $score;
   }
 
   public function getTitle(){
@@ -36,5 +37,44 @@ class Post {
   public function getComments(){
     return $this->comments;
   }
+  public function getScore(){
+    return $this->score;
+  }
+  public static  function  getPostById($id){
+    // retourner le post correspondant à l'id
+  }
+
+  public static function getMaxId(){
+    
+    // retourne le post ayant le plus grand id (le dernier post)
+  }
+
+  public static function getTopTen(){
+    //trié du plus grand score au plus petit score les posts///
+    //récuperer les meilleurs qui datent de moins des 30 derniers jours (un mois) /// 
+    // retourne les 10 meilleurs posts 
+  }
+
+  public function setTitle($title){
+    $this->title = $title;
+  }
+
+  public function setDesc($desc){
+    $this->desc = $desc; 
+  }
+
+  public function setType($type){
+    $this->type = $type;
+  }
+
+  public function setTime($time){
+    $this->time = $time;
+  }
+
+  public function setAuthor($author){
+    $this->author = $author; 
+  }
+
+
 }
  ?>

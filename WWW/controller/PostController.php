@@ -1,18 +1,22 @@
 <?php
 namespace controller;
 
-class PostController extends Main{
+class PostController extends Controller{
 
-  public function __construct($title){
-      parent::__construct($title);
+  public function index() {
+
   }
 
-  static public function instantiate(){
-    return new PostController("Post");
+  public function top() {
+
   }
 
-  public function render(){
-    parent::renderView('post/index');
+  public function read() {
+
+  }
+
+  public function create() {
+
   }
 
 }

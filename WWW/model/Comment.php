@@ -13,7 +13,7 @@ class Comment {
     $this->$text = $text;
     $this->$score = $score;
   }
-  
+
 
   public function getDesc(){
     return $this->desc;
@@ -37,16 +37,12 @@ class Comment {
     this->$desc = $desc;
   }
 
-  public function setTime($time){
-    this->$time = $time;
-  }
-
   public function setText($text){
     this->$text=$text;
   }
 
   public function setAuthor($author){
-    this->$author = $author; 
+    this->$author = $author;
   }
 
   public function setScore($score){

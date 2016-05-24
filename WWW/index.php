@@ -1,21 +1,28 @@
 <?php
-	session_start();
-	include 'Router.php';
-	require 'controller/Autoloader.php';
+	// debug
+	error_reporting(E_ALL);
+	ini_set('display_errors', 'on');
+
+	// imports
+	require 'Autoloader.php';
+	require 'Database.php';
+
+	// initialisations
 	Autoloader::register();
-	Router::initRouter();
-	$MainController= Router::handleRequest($_GET['p']);
-	if(!isset($MainController)){
-		exit(0);
-	}
-	$MainController->init();
+	Session::init();
+	Router::init();
+
+	// Add Routes
+	Router::addRoute('signin', 'controller\UserController', 'signIn');
+	Router::addRoute('signout', 'controller\UserController', 'signOut');
+	Router::addRoute('signup', 'controller\UserController', 'signUp');
+	Router::addRoute('user/(\w+)', 'controller\UserController', 'edit');
+
+	Router::addRoute('', 'controller\PostController', 'index');
+	Router::addRoute('top', 'controller\PostController', 'top');
+	Router::addRoute('post/(\d+)', 'controller\PostController', 'read');
+	Router::addRoute('post/new', 'controller\PostController', 'create');
+
+	// Send the request to the good controller
+	Router::execute($_GET['uri']);
 ?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <?php $MainController->buildHeader('main.css','tinggi.png'); ?>
-  </head>
-  <body>
-    <?php $MainController->render();?>
-  </body>
-</html>

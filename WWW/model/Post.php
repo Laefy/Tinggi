@@ -1,5 +1,6 @@
 <?php
 class Post {
+
   private $id;
   private $type;
   private $title;
@@ -8,6 +9,7 @@ class Post {
   private $author;
   private $comments;
   private $score;
+
   public function __construct($id, $type, $title, $desc, $time, $author, $comment, $score) {
      $this->id = $id;
      $this->type = $type;
@@ -45,14 +47,14 @@ class Post {
   }
 
   public static function getMaxId(){
-    
+
     // retourne le post ayant le plus grand id (le dernier post)
   }
 
   public static function getTopTen(){
     //trié du plus grand score au plus petit score les posts///
-    //récuperer les meilleurs qui datent de moins des 30 derniers jours (un mois) /// 
-    // retourne les 10 meilleurs posts 
+    //récuperer les meilleurs qui datent de moins des 30 derniers jours (un mois) ///
+    // retourne les 10 meilleurs posts
   }
 
   public function setTitle($title){
@@ -60,21 +62,15 @@ class Post {
   }
 
   public function setDesc($desc){
-    $this->desc = $desc; 
+    $this->desc = $desc;
   }
 
   public function setType($type){
     $this->type = $type;
   }
 
-  public function setTime($time){
-    $this->time = $time;
-  }
-
   public function setAuthor($author){
-    $this->author = $author; 
+    $this->author = $author;
   }
-
-
 }
  ?>

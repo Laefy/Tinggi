@@ -11,16 +11,16 @@ class Response{
 
   public function send() {
     switch ($type) {
-      case 404: $this->send404(); break;
+      case 404: $this->send404('Error'); break;
       case 'json': $this->sendJson($data); break;
       case 'redirect': $this->sendRedirect($path); break;
       default: break;
     }
   }
 
-  private function send404(){
+  private function send404($errorMsg){
     header('HTTP/1.0 404 Not Found');
-    Renderer::render404();
+    Renderer::render404($errorMsg);
     exit(0);
   }
 

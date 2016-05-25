@@ -81,11 +81,17 @@ class PostController extends Controller{
   }
 
   public function like($postID){
+    $post = \model\Post::getPostById($postID);
+    $post->toggleLike();
 
+    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
   }
 
   public function dislike($postID){
+    $post = \model\Post::getPostById($postID);
+    $post->toggleDislike();
 
+    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
   }
 
 }

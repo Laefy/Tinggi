@@ -10,6 +10,7 @@ class Post {
     private $author;
     private $comments;
     private $score;
+    private $userScore;
 
     public function __construct($id, $type, $title, $desc, $time, $author, $comment, $score) {
          $this->id = $id;
@@ -20,6 +21,7 @@ class Post {
          $this->author = $author;
          $this->comments = array();
          $this->score = $score;
+         $this->userScore = 0;
     }
 
     public function getId(){
@@ -54,12 +56,16 @@ class Post {
         return $this->score;
     }
 
+    public function getUserScore() {
+        return $this->userScore;
+    }
+
     private static function postFromRow($row) {
-        return new Post($row['id'], $row['type'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, 0);
+        return new Post($row['id'], $row['type'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, $row['score']);
     }
 
     public static function getPostById($id){
-        return postFromRow(\Database::select(['*'], 'post_view', array('id' => $id))[0]);
+        return Post::postFromRow(\Database::select(['*'], 'post_view', array('id' => $id))[0]);
     }
 
     public static function getMatchPosts(){
@@ -76,6 +82,22 @@ class Post {
         }
 
         return posts;
+    }
+
+    public function toggleLike() {
+        $user = \Session::getUser();
+        if ($user != NULL) {
+            $this->userScore = \Database::call('TOGGLE_LIKE', [$user->getId(), $this->id])[0]['love'];
+            $this->score = \Database::select(['score'], 'post_view', array('id_post' => $this->id))[0]['score'];
+        }
+    }
+
+    public function toggleDislike() {
+        $user = \Session::getUser();
+        if ($user != NULL) {
+            $this->userScore = \Database::call('TOGGLE_DISLIKE', [$user->getId(), $this->id])[0]['love'];
+            $this->score = \Database::select(['score'], 'post_view', array('id_post' => $this->id))[0]['score'];
+        }
     }
 
     public function save(){

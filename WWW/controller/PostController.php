@@ -1,5 +1,6 @@
 <?php
-use view\Response as Response;
+use \view\Response as Response;
+use \view\Renderer as Renderer;
 namespace controller;
 
 class PostController extends Controller{
@@ -10,20 +11,17 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     $VIEW_posts = \model\Post::getMatchPosts();
 
     $data = array(
-        "post1" => array( 'title' =>  $VIEW_posts[0]->title,
-                          'desc' =>   $VIEW_posts[0]->desc,
-                          'type' =>   $VIEW_posts[0]->type),
-        "post2" => array( 'title' =>  $VIEW_posts[1]->title,
-                          'desc' =>   $VIEW_posts[1]->desc,
-                          'type' =>   $VIEW_posts[1]->type)
+        "post1" => $VIEW_posts[0],
+        "post2" => $VIEW_posts[1]
                   );
-    $render = new Renderer('Tinggi - Match', 'match.view.php',$VIEW_user, $data);
+    echo $data['post1']->getTitle();
+    $render = new \view\Renderer('Tinggi - Match', 'match.view.php',$VIEW_user, $data);
     $render->render();
   }
 

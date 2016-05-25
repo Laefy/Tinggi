@@ -9,19 +9,25 @@ class User {
   private $score;
   private $posts = array();
 
-  public function __construct($id, $mail, $pseudo, $mdp, $img) {
+  public function __construct($id, $mail, $pseudo, $img, $score) {
        $this->id = $id;
        $this->mail = $mail;
        $this->pseudo = $pseudo;
        $this->img = $img;
+       $this->score = $score;
   }
 
   public function getId(){
     return $this->id;
   }
 
+  private static function userFromRow($row) {
+    return new User($row['id'], $row['mail'], $row['pseudo'], $row['img'], $row['score']);
+  }
+
   public static function getById($id){
-    return \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user', '');
+    $row = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', [])[0];
+    return User::userFromRow($row);
   }
 
   public function getLogin(){

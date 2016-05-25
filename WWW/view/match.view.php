@@ -17,6 +17,7 @@
         <a href="#" class="thumbnail">
           <?php
             $post = $data['post1'];
+            include 'view/match.post.view.php';
           ?>
         </a>
       </div>
@@ -24,6 +25,7 @@
         <a href="#" class="thumbnail">
           <?php
             $post = $data['post2'];
+            include 'view/match.post.view.php';
           ?>
         </a>
       </div>

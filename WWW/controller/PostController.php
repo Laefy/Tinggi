@@ -13,23 +13,16 @@ class PostController extends Controller{
       $VIEW_user == NULL;
     }
 
-    $nbPost = \model\Post::getMaxId();
-    $postLeft = rand(1,$nbPost);
-    do{
-      $postRight = rand(1,$nbPost);
-    }while($postLeft == $postRight);
-
-    $VIEW_postLeft = \model\Post::getPostById($postLeft);
-    $VIEW_postRight = \model\Post::getPostById($postRight);
+    $VIEW_posts = \model\Post::getMatchPosts();
 
     $data = array(
-        "post1" => array( 'title' =>  $VIEW_postLeft->title,
-                          'desc' =>   $VIEW_postLeft->desc,
-                          'type' =>   $VIEW_postLeft->type),
-        "post2" => array( 'title' =>  $VIEW_postRight->title,
-                          'desc' =>   $VIEW_postRight->desc,
-                          'type' =>   $VIEW_postRight->type)
-      );
+        "post1" => array( 'title' =>  $VIEW_posts[0]->title,
+                          'desc' =>   $VIEW_posts[0]->desc,
+                          'type' =>   $VIEW_posts[0]->type),
+        "post2" => array( 'title' =>  $VIEW_posts[1]->title,
+                          'desc' =>   $VIEW_posts[1]->desc,
+                          'type' =>   $VIEW_posts[1]->type)
+                  );
     $render = new Renderer('Tinggi - Match', 'match.view.php', $data);
     $render->render();
   }
@@ -61,6 +54,11 @@ class PostController extends Controller{
 
     $VIEW_post = \model\Post::getPostById($id);
 
+    $data = array(
+      'user' => $VIEW_user,
+      'post' => $VIEW_post
+    );
+
     $render = new Renderer('Tinggi - '.$VIEW_post->getTitle(), 'read.view.php', $data);
     $render->render();
   }
@@ -73,7 +71,10 @@ class PostController extends Controller{
       $VIEW_user == NULL;
     }
 
-    $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php');
+    $data = array(
+      'user' => $VIEW_user
+    );
+    $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php', $data);
     $render->render();
   }
 

@@ -35,6 +35,10 @@ class Comment {
   }
 
   public function save(){
+    /* TO DO :
+    *  Changer l'id du commetaire n'est pas une bonne idée
+    *  La date du post se set toute seule
+    */
     Database::insert(array('id' => $this->id, 'author' => $this->author->getId(), 'target' => $this->target->getId(), 'texte' => '\'' .$this->text. '\''),'comment');
   }
 

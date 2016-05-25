@@ -26,7 +26,7 @@ class Post {
   public function getId(){
     return $this->id;
   }
-  
+
   public function getTitle(){
     return $this->title;
   }
@@ -54,28 +54,28 @@ class Post {
   }
 
   public static function getPostById($id){
-    $row = Database::select(['*'], 'post_view', array('id' => $id))[0];
+    $row = \Database::select(['*'], 'post_view', array('id' => $id))[0];
     return postFromRow($row);
   }
 
   public static function getMatchPosts(){
-    $rows = Database::call('GET_RANDOM_POST', []);
-    return array(postFromRow($rows[0]), postFromRow($rows[1]));
+    $rows = \Database::call('GET_RANDOM_POST', []);
+    return array(Post::postFromRow($rows[0]), Post::postFromRow($rows[1]));
   }
 
   public static function getTopTen(){
-    $rows = Database::select(['*'], 'best_posts', []);
+    $rows = \Database::select(['*'], 'best_posts', []);
     $posts = array();
 
     foreach ($rows as $row) {
-      posts[] = postFromRow(row);
+      array_push(posts, $row);
     }
 
     return posts;
   }
 
   public function save(){
-    Database::insert(array('id' => $this->id, 'type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
+    \Database::insert(array('id' => $this->id, 'type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
   }
 
   public function setTitle($title){

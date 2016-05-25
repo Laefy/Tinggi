@@ -22,7 +22,7 @@ class Router {
 				return call_user_func_array($callback, array_values($params));
 			}
 		}
-    new view\Response(404).send();
+    new view\Response(404).send("Url incorrect! Boufon!");
   }
 }
 ?>

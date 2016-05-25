@@ -7,7 +7,7 @@ class Session{
 
   public static function init(){
 			session_start();
-      self::$user = null;
+			self::$user = null;
 			self::$auth = self::getUserInformation();
 			self::$salt = sha1("&a|n#a$9¤n!5*");
 			Session::connection();
@@ -42,6 +42,20 @@ class Session{
 			$_SERVER['auth'] = self::getUserInformation();
 			$_SERVER['user_id'] = 0;
 	}
+	
+	public static function getUser(){
+		return self::$user->getId();
+	}
+	
+	public static function isLogin(){
+		return is_null(self::$user);	
+	}
+	/*-------PAS FINIS--------------------------------*/
+	/*public static function login($pseudo, $key){
+		if())
+			return true;
+		return false;		
+	}*/
 
 	public static function encrypt($string){
 		return md5(self::$salt.$string.self::$salt);

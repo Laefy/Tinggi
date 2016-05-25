@@ -35,8 +35,7 @@ class Session{
 				}
 				else
 				{
-					session_destroy();
-					session_start();
+					session::reset();
 				}
 			}
 			$_SERVER['auth'] = self::getUserInformation();
@@ -56,6 +55,12 @@ class Session{
 			return true;
 		return false;		
 	}*/
+	
+	public static function reset(){
+		session_destroy();
+		session_start();
+		self::connection();	
+	}
 
 	public static function encrypt($string){
 		return md5(self::$salt.$string.self::$salt);

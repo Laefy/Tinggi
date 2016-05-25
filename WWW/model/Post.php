@@ -49,42 +49,41 @@ class Post {
     public function getComments(){
         return $this->comments;
     }
-    
+
     public function getScore(){
         return $this->score;
     }
 
     private static function postFromRow($row) {
-        return new Post($row['id'], $row['type'], $row['title'], $row['desc'], $row['time'], User::getById($row['author']), 0, 0);
+        return new Post($row['id'], $row['type'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, 0);
     }
 
     public static function getPostById($id){
-        $row = Database::select(['*'], 'post_view', array('id' => $id))[0];
-        return postFromRow($row);
+        return postFromRow(\Database::select(['*'], 'post_view', array('id' => $id))[0]);
     }
 
     public static function getMatchPosts(){
-        $rows = Database::call('GET_RANDOM_POST', []);
-        return array(postFromRow($rows[0]), postFromRow($rows[1]));
+        $rows = \Database::call('GET_RANDOM_POST', []);
+        return array(Post::postFromRow($rows[0]), Post::postFromRow($rows[1]));
     }
 
     public static function getTopTen(){
-        $rows = Database::select(['*'], 'best_posts', []);
+        $rows = \Database::select(['*'], 'best_posts', []);
         $posts = array();
 
         foreach ($rows as $row) {
-            posts[] = postFromRow(row);
+            array_push(posts,postFromRow($row));
         }
 
         return posts;
     }
 
     public function save(){
-        Database::insert(array('id' => $this->id, 'type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
+        \Database::insert(array('id' => $this->id, 'type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
     }
 
-    public function getComments() {
-        $this->comments = Comment::getCommentsByPost($this->id);
+    public function loadComments() {
+        $this->comments = Comment::getCommentsByPost($this);
     }
 
     public function setTitle($title){

@@ -1,5 +1,6 @@
 <?php
-use view\Response as Response;
+use \view\Response as Response;
+use \view\Renderer as Renderer;
 namespace controller;
 
 class PostController extends Controller{
@@ -16,10 +17,11 @@ class PostController extends Controller{
     $VIEW_posts = \model\Post::getMatchPosts();
 
     $data = array(
-        "user" => $VIEW_user,
-        "posts" => $VIEW_posts,
-      );
-    $render = new \view\Renderer('Tinggi - Match', 'match.view.php', $data);
+        "post1" => $VIEW_posts[0],
+        "post2" => $VIEW_posts[1]
+                  );
+    echo $data['post1']->getTitle();
+    $render = new \view\Renderer('Tinggi - Match', 'match.view.php',$VIEW_user, $data);
     $render->render();
   }
 
@@ -72,6 +74,18 @@ class PostController extends Controller{
     );
     $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php', $data);
     $render->render();
+  }
+
+  public function match($postID){
+
+  }
+
+  public function like($postID){
+
+  }
+
+  public function dislike($postID){
+
   }
 
 }

@@ -1,6 +1,5 @@
 function selectWinner(element) {
 	var id = element.getAttribute('data-id');
-	var parameter = '{ "id":' + id + ' }';
 
 	var action = function(response) {
 		// Animation pour le win ?
@@ -8,7 +7,7 @@ function selectWinner(element) {
 		generateNewMatch();
 	}
 
-	ajaxRequest('Post/selectWinner/' + parameter, action);
+	ajaxRequest('Post/selectWinner/' + id, action);
 }
 
 function makeNewMatch() {

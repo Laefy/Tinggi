@@ -15,7 +15,6 @@ class PostController extends Controller{
 
     $nbPost = \model\Post::getMaxId();
     $postLeft = rand(1,$nbPost);
-    $postRight = 0;
     do{
       $postRight = rand(1,$nbPost);
     }while($postLeft == $postRight);
@@ -24,9 +23,12 @@ class PostController extends Controller{
     $VIEW_postRight = \model\Post::getPostById($postRight);
 
     $data = array(
-        "user" => $VIEW_user,
-        "postLeft" => $VIEW_postLeft,
-        "postfRight" => $VIEW_postRight
+        "post1" => array( 'title' =>  $VIEW_postLeft->title,
+                          'desc' =>   $VIEW_postLeft->desc,
+                          'type' =>   $VIEW_postLeft->type),
+        "post2" => array( 'title' =>  $VIEW_postRight->title,
+                          'desc' =>   $VIEW_postRight->desc,
+                          'type' =>   $VIEW_postRight->type)
       );
     $render = new Renderer('Tinggi - Match', 'match.view.php', $data);
     $render->render();
@@ -73,6 +75,18 @@ class PostController extends Controller{
 
     $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php');
     $render->render();
+  }
+
+  public function match($postID){
+
+  }
+
+  public function like($postID){
+
+  }
+
+  public function dislike($postID){
+
   }
 
 }

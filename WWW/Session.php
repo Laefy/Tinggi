@@ -24,8 +24,7 @@ class Session{
 
 	private static function connection(){
 
-			if( (isset($_SERVER['auth'])) && (isset($_SERVER['user_id'])) )
-			{
+			if( (isset($_SERVER['auth'])) && (isset($_SERVER['user_id'])) ){
 				if(strcmp(encrypt(self::$auth,self::getUserInformation()) == 0)){
 					if($_SERVER['user_id'] != 0)
 					{
@@ -41,19 +40,19 @@ class Session{
 			$_SERVER['auth'] = self::getUserInformation();
 			$_SERVER['user_id'] = 0;
 	}
-	
+
 	public static function getUser(){
 		return self::$user->getId();
 	}
-	
+
 	public static function isLogin(){
-		return is_null(self::$user);	
+		return !is_null(self::$user);
 	}
 	/*-------PAS FINIS--------------------------------*/
 	/*public static function login($pseudo, $key){
 		if())
 			return true;
-		return false;		
+		return false;
 	}*/
 	
 	public static function reset(){

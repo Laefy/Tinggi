@@ -22,6 +22,12 @@ class Database {
 		return $stmt->fetchAll();
 	}
 
+	public static function queryVoid($query){
+		$db = self::getInstance();
+		$stmt = $db->prepare($query);
+		$stmt->execute();
+	}
+
 	public static function select($elements,$table,$where){
 		$req = 'SELECT';
 		$count = count($elements);
@@ -35,17 +41,24 @@ class Database {
 				$req .= ',';
 			}
 		}
-		$req .= ' FROM '.$table.' WHERE ';
+		$req .= ' FROM '.$table;
 
-		foreach ($where as $key => $value) {
-			++$i;
-			$req .= $key.' LIKE '.$value;
-			if($i < $last)
-			{
-				$req .= ' AND ';
+		$i = 0;
+		$last = count($where) - 1;
+		if ($last >= 0) {
+			$req .= ' WHERE ';
+
+			foreach ($where as $key => $value) {
+				++$i;
+				$req .= $key.' LIKE '.$value;
+				if($i < $last)
+				{
+					$req .= ' AND ';
+				}
+
 			}
-
 		}
+
 		$req.= ' ;';
 		return self::query($req);
 	}
@@ -66,11 +79,59 @@ class Database {
 			}
 		}
 		$req.= ')'.$values.');';
-		return self::query($req);
+		return self::queryVoid($req);
+	}
+
+	public static function update($elements, $table, $where){
+		$req = 'UPDATE ' .$table;
+		$count = count($elements);
+		$last = $count - 1;
+		$i = 0;
+		$req .= ' SET';
+
+		foreach($elements as $key => $value) {
+			$req .= ' '.$key. ' = ' .$value;
+			if($i < $last)
+			{
+				$req .= ',';
+			}
+			++$i;
+		}
+		$req .= ' WHERE ';
+
+		$i = 0;
+		$last = count($where) - 1;
+		foreach ($where as $key => $value) {
+			++$i;
+			$req .= $key.' LIKE '.$value;
+			if($i < $last)
+			{
+				$req .= ' AND ';
+			}
+
+		}
+		$req.= ' ;';
+		return self::queryVoid($req);
+	}
+
+	public static function call($procedure,$parameters){
+		$req='CALL ' .$procedure. '(';
+		$count = count($parameters);
+		$last = $count - 1;
+		$i = 0;
+
+		for($i = 0; $i < $count; ++$i) {
+			$req .= ' '.$parameters[i];
+			if($i < $last)
+			{
+				$req .= ',';
+			}
+		}
+		$req.=');';
 	}
 
 	public static function delete($id,$table){
-		return self::query('DELETE FROM '.$table.' WHERE id LIKE '.$id.' ;');
+		return self::queryVoid('DELETE FROM '.$table.' WHERE id LIKE '.$id.' ;');
 	}
 }
 ?>

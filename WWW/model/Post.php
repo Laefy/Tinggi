@@ -42,19 +42,34 @@ class Post {
   public function getScore(){
     return $this->score;
   }
-  public static  function  getPostById($id){
-    // retourner le post correspondant à l'id
+
+  private static function postFromRow($row) {
+    return new Post($row['id'], $row['type'], $row['title'], $row['desc'], $row['time'], User::getById($row['author']), 0, 0);
   }
 
-  public static function getMaxId(){
+  public static function getPostById($id){
+    $row = Database::select(['*'], 'post_view', array('id' => $id))[0];
+    return postFromRow($row);
+  }
 
-    // retourne le post ayant le plus grand id (le dernier post)
+  public static function getMatchPosts(){
+    $rows = Database::call('GET_RANDOM_POST', []);
+    return array(postFromRow($rows[0]), postFromRow($rows[1]));
   }
 
   public static function getTopTen(){
-    //trié du plus grand score au plus petit score les posts///
-    //récuperer les meilleurs qui datent de moins des 30 derniers jours (un mois) ///
-    // retourne les 10 meilleurs posts
+    $rows = Database::select(['*'], 'best_posts', []);
+    $posts = array();
+
+    foreach ($rows as $row) {
+      posts[] = postFromRow(row);
+    }
+
+    return posts;
+  }
+
+  public function save(){
+    Database::insert(array('id' => $this->id, 'type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
   }
 
   public function setTitle($title){

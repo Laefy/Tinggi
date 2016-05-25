@@ -14,38 +14,42 @@ class User {
        $this->img = $img;
   }
 
+  public function getId(){
+    return $this->id;
+  }
+
+  public static function getById($id){
+    Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user', '')
+  }
+
   public function getLogin(){
     return $this->pseudo;
   }
   public function getPassword(){
-    //retourne le mot de passe de la BDD
+    return Database::select(['password'], 'user', array('id'=>$this->id))[0]['password'];
   }
   public function getImage(){
     return $this->img;
   }
 
   public function getPosts(){
-    //retourne les posts de l'utilisateur (grâçe à un id)
+    return $this->posts;
   }
 
   public function getScore(){
     return $this->score;
   }
 
-  public function setPassword(){
-    //enregistre le mot de passe de l'utilisateur
+  public function setPassword($password){
+    Database::update(array('password' => '\''.$password.'\''), 'user', array('id'=>$this->id));
   }
 
-  public function setScore(){
-    //Fait la somme des scores des posts de l'utilisateur
+  public function setPosts($posts){
+    $this->posts = $posts;
   }
 
-  public function setPosts(){
-    //enregistre les posts de l'utilisateur (grâçe a son id )
-  }
-
-  public function setImage(){
-    //enregistre une chaine de caractère (qui redirige vers une image)
+  public function setImage($img){
+    $this->img = $img;
   }
 
 }

@@ -1,41 +1,41 @@
 <?php
+namespace view;
 class Renderer{
 
-  private var $title;
-  private var $view;
+  private $title;
+  private $view;
 
   function __construct($title, $view){
     $this->title = $title;
     $this->view = $view;
   }
   private static function render_header($VIEW_title){
-    self::render_one('common/header.view.php');
+    include 'view/common/header.view.php';
   }
 
   private static function render_footer(){
-    self::render_one('common/footer.view.php');
+    include 'view/common/footer.view.php';
   }
 
   private static function render_nav(){
-    self::render_one('common/nav.view.php');
+    include 'view/common/nav.view.php';
   }
 
-  public static function render_one($view){
+  public static function render_one($view, $data){
     include 'view/'.$view;
   }
 
-  public function render(){
+  public function render($data){
     self::render_header($this->title);
     self::render_nav();
     if(isset($this->view))
-      self::render_one($this->view);
+      self::render_one($this->view, $data);
     self::render_footer();
   }
 
-  public static function render404($VIEW_errorMsg) {
-    self::render_header("Error404");
-    self::render_nav();
-    self::render_one("error.php");
+  public static function renderError($VIEW_errorTitle, $VIEW_errorMsg) {
+    self::render_header($VIEW_errorTitle);
+    include 'view/common/error.view.php';
     self::render_footer();
   }
 

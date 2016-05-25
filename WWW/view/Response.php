@@ -1,4 +1,6 @@
 <?php
+namespace view;
+
 class Response{
 
   private $type;
@@ -9,18 +11,18 @@ class Response{
     $this->path = $path;
   }
 
-  public function send() {
-    switch ($type) {
-      case 404: $this->send404('Error'); break;
+  public function send($param) {
+    switch ($this->type) {
+      case 'error': $this->sendError($param['title'],$param['msg']); break;
       case 'json': $this->sendJson($data); break;
       case 'redirect': $this->sendRedirect($path); break;
       default: break;
     }
   }
 
-  private function send404($errorMsg){
+  private function sendError($errorTitle, $errorMsg){
     header('HTTP/1.0 404 Not Found');
-    Renderer::render404($errorMsg);
+    Renderer::renderError($errorTitle,$errorMsg);
     exit(0);
   }
 

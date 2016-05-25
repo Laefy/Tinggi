@@ -1,4 +1,6 @@
 <?php
+use view\Response as Response;
+
 class Router {
 
   public static $ROOT;
@@ -22,7 +24,8 @@ class Router {
 				return call_user_func_array($callback, array_values($params));
 			}
 		}
-    new view\Response(404).send("Url incorrect! Boufon!");
+    $response = new Response('error');
+    $response->send(array( 'title' => 'Error 404', 'msg' =>"Url incorrect! Boufon!"));
   }
 }
 ?>

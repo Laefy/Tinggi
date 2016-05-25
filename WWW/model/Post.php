@@ -21,6 +21,10 @@ class Post {
      $this->score = $score;
   }
 
+  public function getId(){
+    return $this->id;
+  }
+  
   public function getTitle(){
     return $this->title;
   }

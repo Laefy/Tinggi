@@ -2,16 +2,18 @@
 class Comment {
   private $id;
   private $author;
+  private $target;
   private $time;
   private $text;
   private $score;
 
   public function __construct($id,$author,$target,$time,$text,$score){
     $this->id = $id;
-    $this->$author = $author;
-    $this->$time = $time;
-    $this->$text = $text;
-    $this->$score = $score;
+    $this->author = $author;
+    $this->target = $target;
+    $this->time = $time;
+    $this->text = $text;
+    $this->score = $score;
   }
 
 
@@ -32,21 +34,24 @@ class Comment {
     return $this->score;
   }
 
+  public function save(){
+    Database::insert(array('id' => $this->id, 'author' => $this->author->getId(), 'target' => $this->target->getId(), 'texte' => '\'' .$this->text. '\''),'comment');
+  }
 
   public function setDesc($desc){
-    this->$desc = $desc;
+    $this->desc = $desc;
   }
 
   public function setText($text){
-    this->$text=$text;
+    $this->text=$text;
   }
 
   public function setAuthor($author){
-    this->$author = $author;
+    $this->author = $author;
   }
 
   public function setScore($score){
-    this->$score = $score;
+    $this->score = $score;
   }
 
 }

@@ -1,20 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.4.10
 -- http://www.phpmyadmin.net
 --
--- Client :  127.0.0.1
--- Généré le :  Lun 23 Mai 2016 à 16:06
--- Version du serveur :  10.1.13-MariaDB
--- Version de PHP :  5.6.21
+-- Client :  localhost:8889
+-- Généré le :  Mer 25 Mai 2016 à 14:50
+-- Version du serveur :  5.5.42
+-- Version de PHP :  7.0.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Base de données :  `tinggi`
@@ -22,62 +16,77 @@ SET time_zone = "+00:00";
 
 DELIMITER $$
 --
--- Fonctions
+-- Procédures
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_COMMENT` (`id` INT) RETURNS INT(11) NO SQL
-BEGIN
-DECLARE score INT DEFAULT 0;
-
-SELECT SUM(love) 
-INTO score 
-FROM (
-    
-(SELECT 1 AS love 
-FROM score_comment c 
-WHERE c.love = 1 AND c.id_comment = id)
-
-UNION 
-
-(SELECT -1 AS love 
-FROM score_comment sc 
-WHERE sc.love = 0 AND sc.id_comment = id)
-    
-) counter;
-
-RETURN score;
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_POST` (`id` INT) RETURNS INT(11) NO SQL
-BEGIN
-DECLARE score INT DEFAULT 0;
-
-SELECT SUM(love) 
-INTO score 
-FROM (
-    
-(SELECT 1 AS love 
-FROM score_post p
-WHERE p.love = 1 AND p.id_comment = id)
-
-UNION 
-
-(SELECT -1 AS love 
-FROM score_post sp 
-WHERE sp.love = 0 AND sp.id_comment = id)
-    
-) counter;
-
-RETURN score;
-
-END$$
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `SIGN_IN` (`login` VARCHAR(50), `password` VARCHAR(50)) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GET_RANDOM_POST`()
+    NO SQL
 BEGIN
 
 DECLARE id INT DEFAULT 0;
 
-SELECT u.id INTO id FROM user u WHERE 
+SELECT * FROM post_view
+ORDER BY RAND()
+LIMIT 2;
+
+END$$
+
+--
+-- Fonctions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_COMMENT`(`id` INT) RETURNS int(11)
+    NO SQL
+BEGIN
+DECLARE score INT DEFAULT 0;
+
+SELECT SUM(counter.love)
+INTO score
+FROM (
+
+(SELECT SUM(c.love) AS love
+FROM score_comment c
+WHERE c.id_comment = id)
+
+UNION
+
+(SELECT 0 AS love)
+
+) counter;
+
+RETURN score;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_POST`(`id` INT) RETURNS int(11)
+    NO SQL
+BEGIN
+DECLARE score INT DEFAULT 0;
+
+SELECT SUM(counter.love)
+INTO score
+FROM ((
+
+SELECT SUM(p.love) as love
+FROM score_post p
+WHERE p.id_post = id
+
+) UNION (
+
+SELECT 0 as love
+
+)) counter;
+
+
+RETURN score;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `SIGN_IN`(`login` VARCHAR(50), `password` VARCHAR(50)) RETURNS int(11)
+    NO SQL
+BEGIN
+
+DECLARE id INT DEFAULT 0;
+
+SELECT u.id INTO id FROM user u WHERE
 ((u.mail LIKE login) OR (u.pseudo LIKE login))
 AND (u.password LIKE password)
 LIMIT 1;
@@ -87,6 +96,21 @@ RETURN id;
 END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `best_posts`
+--
+CREATE TABLE `best_posts` (
+`id` int(11)
+,`type` enum('EMBED','PHOTO','TEXT','IFRAME')
+,`title` varchar(50)
+,`description` text
+,`time` timestamp
+,`author` int(11)
+,`score` int(11)
+);
 
 -- --------------------------------------------------------
 
@@ -115,7 +139,31 @@ CREATE TABLE `post` (
   `description` text NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `post`
+--
+
+INSERT INTO `post` (`id`, `type`, `title`, `description`, `time`, `author`) VALUES
+(1, 'TEXT', 'Pingouin', 'C''est un pingouin. Il respire par les fesses. Un jour, il s''assoit et il meurt.', '2016-05-25 11:38:09', 1),
+(2, 'TEXT', 'C''est un mec', 'C''est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
+(3, 'TEXT', 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t''es cap ou t''es pas cap.', '2016-05-25 11:41:52', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `post_view`
+--
+CREATE TABLE `post_view` (
+`id` int(11)
+,`type` enum('EMBED','PHOTO','TEXT','IFRAME')
+,`title` varchar(50)
+,`description` text
+,`time` timestamp
+,`author` int(11)
+,`score` int(11)
+);
 
 -- --------------------------------------------------------
 
@@ -141,6 +189,15 @@ CREATE TABLE `score_post` (
   `love` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Contenu de la table `score_post`
+--
+
+INSERT INTO `score_post` (`id_user`, `id_post`, `love`) VALUES
+(2, 2, 1),
+(2, 3, -1),
+(3, 3, -1);
+
 -- --------------------------------------------------------
 
 --
@@ -153,14 +210,57 @@ CREATE TABLE `user` (
   `mail` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `img` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `user`
 --
 
 INSERT INTO `user` (`id`, `pseudo`, `mail`, `password`, `img`) VALUES
-(1, 'admin', 'admin@tinggi.fr', 'test', NULL);
+(1, 'admin', 'admin@tinggi.fr', 'test', NULL),
+(2, 'Céline', 'celine@tinggi.fr', 'celine', NULL),
+(3, 'Mélodie', 'melodie@tinggi.fr', 'melodie', NULL),
+(4, 'Bacon', 'bacon@tinggi.fr', 'bacon', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `user_view`
+--
+CREATE TABLE `user_view` (
+`id` int(11)
+,`pseudo` varchar(30)
+,`mail` varchar(50)
+,`img` varchar(200)
+,`score` decimal(32,0)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `best_posts`
+--
+DROP TABLE IF EXISTS `best_posts`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts` AS select `post_view`.`id` AS `id`,`post_view`.`type` AS `type`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` order by `post_view`.`score` desc limit 10;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `post_view`
+--
+DROP TABLE IF EXISTS `post_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `post_view` AS select `p`.`id` AS `id`,`p`.`type` AS `type`,`p`.`title` AS `title`,`p`.`description` AS `description`,`p`.`time` AS `time`,`p`.`author` AS `author`,`GET_SCORE_POST`(`p`.`id`) AS `score` from `post` `p`;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `user_view`
+--
+DROP TABLE IF EXISTS `user_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_view` AS select `u`.`id` AS `id`,`u`.`pseudo` AS `pseudo`,`u`.`mail` AS `mail`,`u`.`img` AS `img`,sum(`p`.`score`) AS `score` from (`user` `u` join `post_view` `p` on((`u`.`id` = `p`.`author`))) group by `u`.`id`;
 
 --
 -- Index pour les tables exportées
@@ -217,12 +317,12 @@ ALTER TABLE `comment`
 -- AUTO_INCREMENT pour la table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- Contraintes pour les tables exportées
 --
@@ -253,7 +353,3 @@ ALTER TABLE `score_comment`
 ALTER TABLE `score_post`
   ADD CONSTRAINT `fkey_id_post_post` FOREIGN KEY (`id_post`) REFERENCES `post` (`id`),
   ADD CONSTRAINT `fkey_id_user_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`);
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

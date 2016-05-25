@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost:8889
--- Généré le :  Mer 25 Mai 2016 à 15:30
+-- Généré le :  Mer 25 Mai 2016 à 16:18
 -- Version du serveur :  5.5.42
 -- Version de PHP :  7.0.0
 
@@ -145,7 +145,8 @@ CREATE TABLE `post` (
 INSERT INTO `post` (`id`, `type`, `title`, `description`, `time`, `author`) VALUES
 (1, 'TEXT', 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1),
 (2, 'TEXT', 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
-(3, 'TEXT', 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3);
+(3, 'TEXT', 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3),
+(4, 'TEXT', 'Le belge', 'C\'est un belge, il vérifie ses clignotants, et il dit: "Ca marche, ca marche pas, ca marche, ca marche pas, ca marche, ..."', '2016-04-10 22:00:00', 4);
 
 -- --------------------------------------------------------
 
@@ -241,7 +242,7 @@ CREATE TABLE `user_view` (
 --
 DROP TABLE IF EXISTS `best_posts`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts`  AS  select `post_view`.`id` AS `id`,`post_view`.`type` AS `type`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` order by `post_view`.`score` desc limit 10 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts`  AS  select `post_view`.`id` AS `id`,`post_view`.`type` AS `type`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` where (`post_view`.`time` > (curdate() - interval 30 day)) order by `post_view`.`score` desc limit 10 ;
 
 -- --------------------------------------------------------
 
@@ -316,7 +317,7 @@ ALTER TABLE `comment`
 -- AUTO_INCREMENT pour la table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT pour la table `user`
 --

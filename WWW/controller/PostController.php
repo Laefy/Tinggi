@@ -13,20 +13,11 @@ class PostController extends Controller{
       $VIEW_user == NULL;
     }
 
-    $nbPost = \model\Post::getMaxId();
-    $postLeft = rand(1,$nbPost);
-    $postRight = 0;
-    do{
-      $postRight = rand(1,$nbPost);
-    }while($postLeft == $postRight);
-
-    $VIEW_postLeft = \model\Post::getPostById($postLeft);
-    $VIEW_postRight = \model\Post::getPostById($postRight);
+    $VIEW_posts = \model\Post::getMatchPosts();
 
     $data = array(
         "user" => $VIEW_user,
-        "postLeft" => $VIEW_postLeft,
-        "postfRight" => $VIEW_postRight
+        "posts" => $VIEW_posts,
       );
     $render = new Renderer('Tinggi - Match', 'match.view.php', $data);
     $render->render();
@@ -59,6 +50,11 @@ class PostController extends Controller{
 
     $VIEW_post = \model\Post::getPostById($id);
 
+    $data = array(
+      'user' => $VIEW_user,
+      'post' => $VIEW_post
+    );
+
     $render = new Renderer('Tinggi - '.$VIEW_post->getTitle(), 'read.view.php', $data);
     $render->render();
   }
@@ -71,7 +67,10 @@ class PostController extends Controller{
       $VIEW_user == NULL;
     }
 
-    $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php');
+    $data = array(
+      'user' => $VIEW_user
+    );
+    $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php', $data);
     $render->render();
   }
 

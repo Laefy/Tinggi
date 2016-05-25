@@ -2,7 +2,6 @@
 
 namespace model;
 class Post {
-
     private $id;
     private $type;
     private $title;

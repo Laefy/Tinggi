@@ -1,4 +1,6 @@
 <?php
+
+namespace model;
 class User {
   private $id;
   private $mail;
@@ -19,14 +21,14 @@ class User {
   }
 
   public static function getById($id){
-    Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user', '')
+    return \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user', '');
   }
 
   public function getLogin(){
     return $this->pseudo;
   }
   public function getPassword(){
-    return Database::select(['password'], 'user', array('id'=>$this->id))[0]['password'];
+    return \Database::select(['password'], 'user', array('id'=>$this->id))[0]['password'];
   }
   public function getImage(){
     return $this->img;

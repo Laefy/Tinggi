@@ -23,6 +23,8 @@
 	Router::addRoute('post/(\d+)', 'controller\PostController', 'read');
 	Router::addRoute('post/new', 'controller\PostController', 'create');
 
+	Router::addRoute('post/comment/(\d+)', 'controller\CommentController', 'send');
+
 	// Send the request to the good controller
 	Router::execute($_GET['uri']);
 ?>

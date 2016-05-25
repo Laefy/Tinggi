@@ -55,12 +55,11 @@ class Post {
     }
 
     private static function postFromRow($row) {
-        return new Post($row['id'], $row['type'], $row['title'], $row['desc'], $row['time'], User::getById($row['author']), 0, 0);
+        return new Post($row['id'], $row['type'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, 0);
     }
 
     public static function getPostById($id){
-        $row = \Database::select(['*'], 'post_view', array('id' => $id))[0];
-        return postFromRow($row);
+        return postFromRow(\Database::select(['*'], 'post_view', array('id' => $id))[0]);
     }
 
     public static function getMatchPosts(){
@@ -73,7 +72,6 @@ class Post {
         $posts = array();
 
         foreach ($rows as $row) {
-            //posts[] = postFromRow(row);
             array_push(posts,postFromRow($row));
         }
 

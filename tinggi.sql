@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.10
+-- version 4.6.1
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost:8889
--- Généré le :  Mer 25 Mai 2016 à 14:50
+-- Généré le :  Mer 25 Mai 2016 à 15:30
 -- Version du serveur :  5.5.42
 -- Version de PHP :  7.0.0
 
@@ -18,8 +18,7 @@ DELIMITER $$
 --
 -- Procédures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GET_RANDOM_POST`()
-    NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GET_RANDOM_POST` ()  NO SQL
 BEGIN
 
 DECLARE id INT DEFAULT 0;
@@ -33,8 +32,7 @@ END$$
 --
 -- Fonctions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_COMMENT`(`id` INT) RETURNS int(11)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_COMMENT` (`id` INT) RETURNS INT(11) NO SQL
 BEGIN
 DECLARE score INT DEFAULT 0;
 
@@ -56,8 +54,7 @@ RETURN score;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_POST`(`id` INT) RETURNS int(11)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_POST` (`id` INT) RETURNS INT(11) NO SQL
 BEGIN
 DECLARE score INT DEFAULT 0;
 
@@ -80,8 +77,7 @@ RETURN score;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `SIGN_IN`(`login` VARCHAR(50), `password` VARCHAR(50)) RETURNS int(11)
-    NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `SIGN_IN` (`login` VARCHAR(50), `password` VARCHAR(50)) RETURNS INT(11) NO SQL
 BEGIN
 
 DECLARE id INT DEFAULT 0;
@@ -101,6 +97,7 @@ DELIMITER ;
 
 --
 -- Doublure de structure pour la vue `best_posts`
+-- (Voir ci-dessous la vue réelle)
 --
 CREATE TABLE `best_posts` (
 `id` int(11)
@@ -139,21 +136,22 @@ CREATE TABLE `post` (
   `description` text NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `post`
 --
 
 INSERT INTO `post` (`id`, `type`, `title`, `description`, `time`, `author`) VALUES
-(1, 'TEXT', 'Pingouin', 'C''est un pingouin. Il respire par les fesses. Un jour, il s''assoit et il meurt.', '2016-05-25 11:38:09', 1),
-(2, 'TEXT', 'C''est un mec', 'C''est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
-(3, 'TEXT', 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t''es cap ou t''es pas cap.', '2016-05-25 11:41:52', 3);
+(1, 'TEXT', 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1),
+(2, 'TEXT', 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
+(3, 'TEXT', 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3);
 
 -- --------------------------------------------------------
 
 --
 -- Doublure de structure pour la vue `post_view`
+-- (Voir ci-dessous la vue réelle)
 --
 CREATE TABLE `post_view` (
 `id` int(11)
@@ -210,7 +208,7 @@ CREATE TABLE `user` (
   `mail` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `img` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `user`
@@ -226,6 +224,7 @@ INSERT INTO `user` (`id`, `pseudo`, `mail`, `password`, `img`) VALUES
 
 --
 -- Doublure de structure pour la vue `user_view`
+-- (Voir ci-dessous la vue réelle)
 --
 CREATE TABLE `user_view` (
 `id` int(11)
@@ -242,7 +241,7 @@ CREATE TABLE `user_view` (
 --
 DROP TABLE IF EXISTS `best_posts`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts` AS select `post_view`.`id` AS `id`,`post_view`.`type` AS `type`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` order by `post_view`.`score` desc limit 10;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts`  AS  select `post_view`.`id` AS `id`,`post_view`.`type` AS `type`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` order by `post_view`.`score` desc limit 10 ;
 
 -- --------------------------------------------------------
 
@@ -251,7 +250,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `post_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `post_view` AS select `p`.`id` AS `id`,`p`.`type` AS `type`,`p`.`title` AS `title`,`p`.`description` AS `description`,`p`.`time` AS `time`,`p`.`author` AS `author`,`GET_SCORE_POST`(`p`.`id`) AS `score` from `post` `p`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `post_view`  AS  select `p`.`id` AS `id`,`p`.`type` AS `type`,`p`.`title` AS `title`,`p`.`description` AS `description`,`p`.`time` AS `time`,`p`.`author` AS `author`,`GET_SCORE_POST`(`p`.`id`) AS `score` from `post` `p` ;
 
 -- --------------------------------------------------------
 
@@ -260,7 +259,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `user_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_view` AS select `u`.`id` AS `id`,`u`.`pseudo` AS `pseudo`,`u`.`mail` AS `mail`,`u`.`img` AS `img`,sum(`p`.`score`) AS `score` from (`user` `u` join `post_view` `p` on((`u`.`id` = `p`.`author`))) group by `u`.`id`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_view`  AS  select `u`.`id` AS `id`,`u`.`pseudo` AS `pseudo`,`u`.`mail` AS `mail`,`u`.`img` AS `img`,sum(`p`.`score`) AS `score` from (`user` `u` join `post_view` `p` on((`u`.`id` = `p`.`author`))) group by `u`.`id` ;
 
 --
 -- Index pour les tables exportées
@@ -317,12 +316,12 @@ ALTER TABLE `comment`
 -- AUTO_INCREMENT pour la table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- Contraintes pour les tables exportées
 --

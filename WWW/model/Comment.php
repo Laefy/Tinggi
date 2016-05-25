@@ -1,4 +1,6 @@
 <?php
+namespace model;
+
 class Comment {
   private $id;
   private $author;
@@ -14,6 +16,23 @@ class Comment {
     $this->time = $time;
     $this->text = $text;
     $this->score = $score;
+  }
+
+  private static function commentFromRow($row) {
+    return new Comment($row['id'], User::getById($row['author']), NULL, $row['time'], $row['text'], $row['score']);
+  }
+
+  public static function getCommentsByPost($post) {
+      $rows = \Database::select(['*'], 'comment', array('target' => $post->getId()));
+      $comments = array();
+
+      foreach ($rows as $row) {
+        $comment = commentFromRow($row);
+        $comment->target = $post;
+        array_push($comments, $comment);
+      }
+
+      return $comments;
   }
 
 
@@ -35,6 +54,10 @@ class Comment {
   }
 
   public function save(){
+    /* TO DO :
+    *  Changer l'id du commetaire n'est pas une bonne idée
+    *  La date du post se set toute seule
+    */
     Database::insert(array('id' => $this->id, 'author' => $this->author->getId(), 'target' => $this->target->getId(), 'texte' => '\'' .$this->text. '\''),'comment');
   }
 
@@ -53,6 +76,5 @@ class Comment {
   public function setScore($score){
     $this->score = $score;
   }
-
 }
 ?>

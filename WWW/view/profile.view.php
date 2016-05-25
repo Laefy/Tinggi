@@ -25,7 +25,7 @@
                 <input type="password" class="form-control" id="password" placeholder="mot de passe">
               </div>
               <div class="form-group">
-                <input type="login" class="form-control" id="login" placeholder="pseudo">
+                <input type="password" class="form-control" id="password" placeholder="confirmation du mot de passe">
               </div>
               <div class="form-group">
                 <label for="img">Choissisez une image de profil</label>

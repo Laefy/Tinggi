@@ -35,7 +35,7 @@ class Database {
 		$i = 0;
 
 		for($i = 0; $i < $count; ++$i) {
-			$req .= ' '.$elements[i];
+			$req .= ' '.$elements[$i];
 			if($i < $last)
 			{
 				$req .= ',';

@@ -23,7 +23,7 @@ class PostController extends Controller{
                           'desc' =>   $VIEW_posts[1]->desc,
                           'type' =>   $VIEW_posts[1]->type)
                   );
-    $render = new Renderer('Tinggi - Match', 'match.view.php', $data);
+    $render = new Renderer('Tinggi - Match', 'match.view.php',$VIEW_user, $data);
     $render->render();
   }
 

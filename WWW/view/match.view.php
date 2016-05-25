@@ -15,20 +15,16 @@
     <div class="col-xs-10 col-xs-offset-1">
       <div class="col-md-6">
         <a href="#" class="thumbnail">
-          <!--<img src="..." alt="...">-->
-          <div class="caption">
-            <h3>Match 1</h3>
-            <p>description</p>
-          </div>
+          <?php
+            $post = $data['post1'];
+          ?>
         </a>
       </div>
       <div class="col-md-6">
         <a href="#" class="thumbnail">
-          <!--<img src="..." alt="...">-->
-          <div class="caption">
-            <h3>Match 2</h3>
-            <p>description</p>
-          </div>
+          <?php
+            $post = $data['post2'];
+          ?>
         </a>
       </div>
     </div>

@@ -1,16 +1,20 @@
 <?php
 class Database {
 
-	private static $host = 'localhost';
+	private static $host = '127.0.0.1:3307';
 	private static $dbname = "Tinggi";
-	private static $user = "root";
-	private static $password = "root";
+	private static $user = "Test";
+	private static $password = "test";
 	private static $pdo = null;
 
 	public static function getInstance(){
-		if(is_null(self::$pdo))
-		{
-			self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname.';charset=UTF-8', self::$user, self::$password);
+		if(is_null(self::$pdo)){
+			try {
+					self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname, self::$user, self::$password);
+			}
+			catch( PDOException $Exception ) {
+    		echo $Exception->getMessage( ) , $Exception->getCode( );
+			}
 		}
 		return self::$pdo;
 	}

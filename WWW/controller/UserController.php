@@ -32,6 +32,6 @@ class UserController extends Controller{
     $render = new Renderer('Tinggi - Modifier votre profile', 'profile.view.php', $data);
     $render->render();
   }
-
+  
 }
 ?>

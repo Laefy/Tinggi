@@ -10,7 +10,7 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     $VIEW_posts = \model\Post::getMatchPosts();
@@ -19,7 +19,7 @@ class PostController extends Controller{
         "user" => $VIEW_user,
         "posts" => $VIEW_posts,
       );
-    $render = new Renderer('Tinggi - Match', 'match.view.php', $data);
+    $render = new \view\Renderer('Tinggi - Match', 'match.view.php', $data);
     $render->render();
   }
 

@@ -39,6 +39,7 @@ class Renderer{
 
   public static function renderError($VIEW_errorTitle, $VIEW_errorMsg) {
     self::render_header($VIEW_errorTitle);
+    self::render_nav($this->currentUser);
     include 'view/common/error.view.php';
     self::render_footer();
   }

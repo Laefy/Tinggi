@@ -14,9 +14,14 @@
 
 	// Add Routes
 	Router::addRoute('signin', 'controller\UserController', 'signIn');
-	Router::addRoute('signout', 'controller\UserController', 'signOut');
+	Router::addRoute('signin/valid', 'controller\UserController', 'validsignin');
 	Router::addRoute('signup', 'controller\UserController', 'signUp');
+	Router::addRoute('signup/new', 'controller\UserController', 'validsignup');
+	Router::addRoute('signout', 'controller\UserController', 'signOut');
+	Router::addRoute('signup/error', 'controller\UserController', 'signup');
+
 	Router::addRoute('user/(\w+)', 'controller\UserController', 'edit');
+	Router::addRoute('user/top', 'controller\UserController', 'top');
 
 	Router::addRoute('', 'controller\PostController', 'index');
 	Router::addRoute('top', 'controller\PostController', 'top');
@@ -26,9 +31,6 @@
 	Router::addRoute('post/toggleDislike/(\d+)', 'controller\PostController', 'dislike');
 
 	Router::addRoute('post/comment/(\d+)', 'controller\CommentController', 'send');
-	Router::addRoute('signup/new', 'controller\UserController', 'validsignup');
-	Router::addRoute('signin/valid', 'controller\UserController', 'validsignin');
-	Router::addRoute('signup/error', 'controller\UserController', 'signup');
 
 	// Send the request to the good controller
 	Router::execute($_GET['uri']);

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2016 at 10:20 AM
+-- Generation Time: May 26, 2016 at 12:41 PM
 -- Server version: 5.7.9
 -- PHP Version: 5.6.16
 
@@ -33,6 +33,21 @@ DECLARE id INT DEFAULT 0;
 SELECT * FROM post_view
 ORDER BY RAND()
 LIMIT 2;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `SIGN_IN`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SIGN_IN` (IN `login` VARCHAR(50), IN `password` VARCHAR(50))  NO SQL
+BEGIN
+
+DECLARE id INT DEFAULT 0;
+
+SELECT u.id INTO id FROM user u WHERE
+((u.mail LIKE login) OR (u.pseudo LIKE login))
+AND (u.password LIKE password)
+LIMIT 1;
+
+SELECT id;
 
 END$$
 
@@ -128,21 +143,6 @@ SELECT 0 as love
 
 
 RETURN score;
-
-END$$
-
-DROP FUNCTION IF EXISTS `SIGN_IN`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `SIGN_IN` (`login` VARCHAR(50), `password` VARCHAR(50)) RETURNS INT(11) NO SQL
-BEGIN
-
-DECLARE id INT DEFAULT 0;
-
-SELECT u.id INTO id FROM user u WHERE
-((u.mail LIKE login) OR (u.pseudo LIKE login))
-AND (u.password LIKE password)
-LIMIT 1;
-
-RETURN id;
 
 END$$
 

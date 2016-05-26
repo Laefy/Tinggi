@@ -33,7 +33,7 @@ class Response{
   }
 
   private function sendRedirect($path){
-    header('Location : '.$path);
+    header('Location : '.\Router::$ROOT.$path);
     exit(0);
   }
 }

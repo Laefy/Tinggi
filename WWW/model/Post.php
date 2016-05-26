@@ -55,7 +55,7 @@ class Post {
     }
 
     private static function postFromRow($row) {
-        return new Post($row['id'], $row['title'], $row['desc'], $row['time'], User::getById($row['author']), 0, 0);
+        return new Post($row['id'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, 0);
     }
 
     public static function getPostById($id){

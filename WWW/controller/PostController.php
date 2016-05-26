@@ -95,21 +95,22 @@ class PostController extends Controller{
   }
 
   public static function getPostDescPattern(){
-    return '/^((?P<mediaType>\w+):\s*(?P<mediaContent>\d+)\n)?(?P<postDesc>.*)/';
+    return '/^((?P<mediaType>\w+):\s*(?P<mediaContent>[a-zA-Z0-9\/\_\.:]+)\s)?(?P<postDesc>.*)/';
   }
 
   public static function makeBaliseFromDesc($desc){
     if(preg_match(self::getPostDescPattern(),$desc, $matches)){
-      print_r($matches);
-      /*switch ($matches) {
-        case 'value':
-          # code...
+      switch ($matches['mediaType']) {
+        case 'img':
+          echo '<img src="data/img/',$matches['mediaContent'],'">';
           break;
-
+        case 'vid':
+            echo '<iframe width="420" height="315" src="',$matches['mediaContent'],'" frameborder="0" allowfullscreen></iframe>';
+            break;
         default:
-          # code...
+          echo $matches['postDesc'];
           break;
-      }*/
+      }
     }
     else{
       echo 'Contenu indisponible';

@@ -102,10 +102,10 @@ class PostController extends Controller{
     if(preg_match(self::getPostDescPattern(),$desc, $matches)){
       switch ($matches['mediaType']) {
         case 'img':
-          echo '<img src="data/img/',$matches['mediaContent'],'">';
+          echo '<img class="img_match" src="data/img/',$matches['mediaContent'],'">';
           break;
         case 'vid':
-            echo '<iframe width="420" height="315" src="',$matches['mediaContent'],'" frameborder="0" allowfullscreen></iframe>';
+            echo '<iframe src="',$matches['mediaContent'],'" frameborder="0" allowfullscreen></iframe>';
             break;
         default:
           echo $matches['postDesc'];

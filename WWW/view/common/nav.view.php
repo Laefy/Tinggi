@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-tinggi navbar-fixed-top">
     <div class="container">
         <div class="navbar-header page-scroll">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -9,6 +9,7 @@
             </button>
             <a class="navbar-brand" href="#page-top">Tinggi</a>
         </div>
+
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="page-scroll">
@@ -18,23 +19,8 @@
                     <a href="">Top</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="">Stats</a>
+                    <a href="">Connexion</a>
                 </li>
-                <?php
-                if(isset($VIEW_user)){
-                  echo '<li class="page-scroll">
-                        <a href="">Mon Compte</a>
-                        </li>
-                        <li class="page-scroll">
-                        <a href="">Deconnexion</a>
-                        </li>';
-                }
-                else{
-                  echo '<li class="page-scroll">
-                      <a href="">Connexion</a>
-                      </li>';
-                }
-                ?>
             </ul>
         </div>
     </div>

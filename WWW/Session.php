@@ -49,7 +49,7 @@ class Session{
 	}
 
 	public static function isLogin(){
-		return is_null(self::$user);
+		return !is_null(self::$user);
 	}
 	/*-------PAS FINIS--------------------------------*/
 	/*public static function login($pseudo, $key){

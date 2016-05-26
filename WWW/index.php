@@ -28,6 +28,7 @@
 	Router::addRoute('post/comment/(\d+)', 'controller\CommentController', 'send');
 	Router::addRoute('signup/new', 'controller\UserController', 'validsignup');
 	Router::addRoute('signin/valid', 'controller\UserController', 'validsignin');
+	Router::addRoute('signup/error', 'controller\UserController', 'signup');
 
 	// Send the request to the good controller
 	Router::execute($_GET['uri']);

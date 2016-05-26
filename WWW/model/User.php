@@ -87,6 +87,14 @@ class User {
     $this->img = $img;
   }
 
+  public function setLogin($login){
+    $this->pseudo = $login;
+  }
+
+  public function setMail($mail){
+    $this->mail = $mail;
+  }
+
   public function save() {
     \Database::insert(array('mail' => '\''.$this->mail.'\'', 'pseudo' => '\''.$this->pseudo.'\'', 'img' => $this->img), 'user');
   }

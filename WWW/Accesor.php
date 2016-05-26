@@ -1,10 +1,10 @@
 <?php
 class Accesor {
 
-    public static get($element, $type){
+    public static function get($element, $type){
       return $_GET[$element];
     }
-    public static post($element, $type){
+    public static function post($element, $type){
       return $_POST[$element];
     }
 
@@ -31,7 +31,7 @@ class Accesor {
     }
 
     private static function check($elements) {
-      $error = []
+      $error = [];
       foreach ($elements as $var => $param) {
         switch($param[0]) {
           case 'number' :

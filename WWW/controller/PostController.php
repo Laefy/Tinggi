@@ -34,14 +34,14 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     $VIEW_posts = \model\Post::getTopTen();
     $data = array(
         "posts" => $VIEW_posts
       );
-    $render = new Renderer('Tinggy - Top', 'top.view.php', $VIEW_user, $data);
+    $render = new \view\Renderer('Tinggy - Top', 'top.view.php', $VIEW_user, $data);
     $render->render();
   }
 
@@ -59,7 +59,7 @@ class PostController extends Controller{
       'post' => $VIEW_post
     );
 
-    $render = new Renderer('Tinggy - '.$VIEW_post->getTitle(), 'read.view.php', $VIEW_user, $data);
+    $render = new \view\Renderer('Tinggy - '.$VIEW_post->getTitle(), 'read.view.php', $VIEW_user, $data);
     $render->render();
   }
 
@@ -72,10 +72,10 @@ class PostController extends Controller{
     }
 
     if($VIEW_user){
-      $render = new Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, NULL);
+      $render = new \view\Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, NULL);
       $render->render();
     } else {
-      $response = new Response('redirect', 'signup');
+      $response = new \view\Response('redirect', 'signup');
       $response->send();
     }
   }
@@ -88,7 +88,7 @@ class PostController extends Controller{
     $post = \model\Post::getPostById($postID);
     $post->toggleLike();
 
-    $response = new Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
     $response->send();
   }
 
@@ -96,7 +96,7 @@ class PostController extends Controller{
     $post = \model\Post::getPostById($postID);
     $post->toggleDislike();
 
-    $response = new Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
     $response->send();
   }
 

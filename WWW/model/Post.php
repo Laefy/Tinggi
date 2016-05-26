@@ -78,7 +78,7 @@ class Post {
         $posts = array();
 
         foreach ($rows as $row) {
-            array_push(posts,postFromRow($row));
+            array_push(posts, Post::postFromRow($row));
         }
 
         return posts;

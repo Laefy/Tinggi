@@ -9,17 +9,21 @@ class Comment {
   private $text;
   private $score;
 
-  public function __construct($id,$author,$target,$time,$text,$score){
-    $this->id = $id;
+  public function __construct($author,$target,$text){
+    $this->id = 0;
     $this->author = $author;
     $this->target = $target;
-    $this->time = $time;
+    $this->time = 0;
     $this->text = $text;
-    $this->score = $score;
+    $this->score = 0;
   }
 
   private static function commentFromRow($row) {
-    return new Comment($row['id'], User::getById($row['author']), NULL, $row['time'], $row['text'], $row['score']);
+    $comment = new Comment(User::getById($row['author']), NULL, $row['text']);
+    $comment->id = $row['id'];
+    $comment->time = $row['time'];
+    $comment->score = $row['score'];
+    return $comment;
   }
 
   public static function getCommentsByPost($post) {
@@ -54,11 +58,7 @@ class Comment {
   }
 
   public function save(){
-    /* TO DO :
-    *  Changer l'id du commetaire n'est pas une bonne idée
-    *  La date du post se set toute seule
-    */
-    Database::insert(array('id' => $this->id, 'author' => $this->author->getId(), 'target' => $this->target->getId(), 'texte' => '\'' .$this->text. '\''),'comment');
+    Database::insert(array('author' => $this->author->getId(), 'target' => $this->target->getId(), 'texte' => '\'' .$this->text. '\''),'comment');
   }
 
   public function setDesc($desc){
@@ -75,6 +75,10 @@ class Comment {
 
   public function setScore($score){
     $this->score = $score;
+  }
+
+  public function delete() {
+    \Database::delete($this->id, 'comment');
   }
 }
 ?>

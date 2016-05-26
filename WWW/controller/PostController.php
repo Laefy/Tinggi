@@ -24,8 +24,8 @@ class PostController extends Controller{
     $data = array(
         "post1" => $VIEW_posts[0],
         "post2" => $VIEW_posts[1]
-                  );
-    $render = new \view\Renderer('Tinggy - Match', 'match.view.php',$VIEW_user, $data);
+      );
+    $render = new \view\Renderer('Tinggy - Match', 'match.view.php', $VIEW_user, $data);
     $render->render();
   }
 
@@ -71,9 +71,13 @@ class PostController extends Controller{
       $VIEW_user == NULL;
     }
 
-    $data = array();
-    $render = new Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, $data);
-    $render->render();
+    if($VIEW_user){
+      $render = new Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, NULL);
+      $render->render();
+    } else {
+      $response = new Response('redirect', 'signup');
+      $response->send();
+    }
   }
 
   public function match($postID){
@@ -84,14 +88,16 @@ class PostController extends Controller{
     $post = \model\Post::getPostById($postID);
     $post->toggleLike();
 
-    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
+    $response = new Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response->send();
   }
 
   public function dislike($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleDislike();
 
-    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
+    $response = new Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response->send();
   }
 
   public static function getPostDescPattern(){

@@ -11,15 +11,15 @@ class Post {
     private $score;
     private $userScore;
 
-    public function __construct($id, $title, $desc, $time, $author, $comment, $score) {
-         $this->id = $id;
-         $this->title = $title;
-         $this->desc = $desc;
-         $this->time = $time;
-         $this->author = $author;
-         $this->comments = array();
-         $this->score = $score;
-         $this->userScore = 0;
+    public function __construct($title, $desc, $author) {
+        $this->id = 0;
+        $this->title = $title;
+        $this->desc = $desc;
+        $this->time = 0;
+        $this->author = $author;
+        $this->comments = array();
+        $this->score = 0;
+        $this->userScore = 0;
     }
 
     public function getId(){
@@ -54,8 +54,12 @@ class Post {
         return $this->userScore;
     }
 
-    private static function postFromRow($row) {
-        return new Post($row['id'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, 0);
+    private static function postFromRow($row, $user = NULL) {
+        $post = new Post($row['title'], $row['description'], $user == NULL ? User::getById($row['author']) : $user);
+        $post->id = $row['id'];
+        $post->time = $row['time'];
+        $post->score = $row['score'];
+        return $post;
     }
 
     public static function getPostById($id){
@@ -67,15 +71,27 @@ class Post {
         return array(Post::postFromRow($rows[0]), Post::postFromRow($rows[1]));
     }
 
+    public static function getPostsByUser($user) {
+        $rows = \Database::select(['*'], 'post_view', array('author' => $user->getId()));
+        $posts = array();
+
+        foreach ($rows as $row) {
+            $post = postFromRow($row, $user);
+            array_push($posts, $post);
+        }
+
+        return $posts;
+    }
+
     public static function getTopTen(){
         $rows = \Database::select(['*'], 'best_posts', []);
         $posts = array();
 
         foreach ($rows as $row) {
-            array_push(posts, Post::postFromRow($row));
+            array_push($posts, Post::postFromRow($row));
         }
 
-        return posts;
+        return $posts;
     }
 
     public function toggleLike() {
@@ -95,7 +111,7 @@ class Post {
     }
 
     public function save(){
-        \Database::insert(array('id' => $this->id, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
+        \Database::insert(array('id' => $this->id, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()));
     }
 
     public function loadComments() {
@@ -112,6 +128,10 @@ class Post {
 
     public function setAuthor($author){
         $this->author = $author;
+    }
+
+    public function delete() {
+        \Database::delete($this->id, 'post');
     }
 }
 ?>

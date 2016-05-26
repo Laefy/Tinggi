@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2016 at 01:13 PM
+-- Generation Time: May 26, 2016 at 06:40 PM
 -- Server version: 5.7.9
 -- PHP Version: 5.6.16
 
@@ -33,6 +33,16 @@ DECLARE id INT DEFAULT 0;
 SELECT * FROM post_view
 ORDER BY RAND()
 LIMIT 2;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `POST_WIN`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `POST_WIN` (IN `id` INT)  NO SQL
+BEGIN
+
+UPDATE post p
+SET p.win = p.win + 1
+WHERE p.id = id;
 
 END$$
 
@@ -131,13 +141,15 @@ SELECT SUM(counter.love)
 INTO score
 FROM ((
 
-SELECT SUM(p.love) as love
-FROM score_post p
-WHERE p.id_post = id
+SELECT SUM(s.love) as love
+FROM score_post s
+WHERE s.id_post = id
 
 ) UNION (
 
-SELECT 0 as love
+SELECT p.win
+FROM post p
+WHERE p.id = id
 
 )) counter;
 
@@ -195,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
   PRIMARY KEY (`id`),
   KEY `author` (`author`),
   KEY `target` (`target`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -210,6 +222,7 @@ CREATE TABLE IF NOT EXISTS `post` (
   `description` text NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` int(11) NOT NULL,
+  `win` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `author` (`author`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
@@ -218,10 +231,10 @@ CREATE TABLE IF NOT EXISTS `post` (
 -- Dumping data for table `post`
 --
 
-INSERT INTO `post` (`id`, `title`, `description`, `time`, `author`) VALUES
-(1, 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1),
-(2, 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
-(3, 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3);
+INSERT INTO `post` (`id`, `title`, `description`, `time`, `author`, `win`) VALUES
+(1, 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1, 0),
+(2, 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4, 1),
+(3, 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3, 0);
 
 -- --------------------------------------------------------
 

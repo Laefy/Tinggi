@@ -25,6 +25,17 @@ class User {
     return new User($row['id'], $row['mail'], $row['pseudo'], $row['img'], $row['score']);
   }
 
+  public static function getTopTen(){
+      $rows = \Database::select(['*'], 'best_users', []);
+      $users = array();
+
+      foreach ($rows as $row) {
+          array_push(users, User::userFromRow($row));
+      }
+
+      return users;
+  }
+
   public static function getById($id){
     $row = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', [])[0];
     return User::userFromRow($row);

@@ -34,14 +34,14 @@ class UserController extends Controller{
   }
 
   public function top() {
-    $VIEW_user;
-    if(\Session::isLogin()){
-      $VIEW_user = \Session::getUser();
-    } else {
+    if(!\Session::isLogin()){
       $response = new \view\Response('redirect', 'signin');
       $response->send();
     }
-    $render = new \view\Renderer('Tinggy - Les Tops des Tops', 'tops.view.php', $VIEW_user, NULL);
+    $VIEW_user = \Session::getUser();
+    $VIEW_topusers = \model\User::getTopTen();
+    $VIEW_posts = \model\Post::getPostsByUser($VIEW_user);
+    $render = new \view\Renderer('Tinggy - Les Tops des Tops', 'tops.view.php', $VIEW_user,['users' => $VIEW_topusers, 'posts' => $VIEW_posts]);
     $render->render();
   }
 

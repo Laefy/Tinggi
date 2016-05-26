@@ -13,15 +13,19 @@ class PostController extends Controller{
     } else {
       $VIEW_user = NULL;
     }
-
-    $VIEW_posts = \model\Post::getMatchPosts();
+    $VIEW_posts;
+    $session_Match = \Session::getMatch();
+    if($session_Match == NULL){
+      $VIEW_posts = \model\Post::getMatchPosts();
+    } else {
+      array_push($VIEW_posts, \model\Post::getPostById($session_Match[0]), \model\Post::getPostById($session_Match[1]));
+    }
 
     $data = array(
         "post1" => $VIEW_posts[0],
         "post2" => $VIEW_posts[1]
                   );
-    echo $data['post1']->getTitle();
-    $render = new \view\Renderer('Tinggi - Match', 'match.view.php',$VIEW_user, $data);
+    $render = new \view\Renderer('Tinggy - Match', 'match.view.php',$VIEW_user, $data);
     $render->render();
   }
 
@@ -35,10 +39,9 @@ class PostController extends Controller{
 
     $VIEW_posts = \model\Post::getTopTen();
     $data = array(
-        "user" => $VIEW_user,
         "posts" => $VIEW_posts
       );
-    $render = new Renderer('Tinggi - Top', 'top.view.php', $data);
+    $render = new Renderer('Tinggy - Top', 'top.view.php', $VIEW_user, $data);
     $render->render();
   }
 
@@ -53,11 +56,10 @@ class PostController extends Controller{
     $VIEW_post = \model\Post::getPostById($id);
 
     $data = array(
-      'user' => $VIEW_user,
       'post' => $VIEW_post
     );
 
-    $render = new Renderer('Tinggi - '.$VIEW_post->getTitle(), 'read.view.php', $data);
+    $render = new Renderer('Tinggy - '.$VIEW_post->getTitle(), 'read.view.php', $VIEW_user, $data);
     $render->render();
   }
 
@@ -69,10 +71,8 @@ class PostController extends Controller{
       $VIEW_user == NULL;
     }
 
-    $data = array(
-      'user' => $VIEW_user
-    );
-    $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php', $data);
+    $data = array();
+    $render = new Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, $data);
     $render->render();
   }
 

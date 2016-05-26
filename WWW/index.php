@@ -26,6 +26,8 @@
 	Router::addRoute('post/toggleDislike/(\d+)', 'controller\PostController', 'dislike');
 
 	Router::addRoute('post/comment/(\d+)', 'controller\CommentController', 'send');
+	Router::addRoute('signup/new', 'controller\UserController', 'validsignup');
+	Router::addRoute('signin/valid', 'controller\UserController', 'validsignin');
 
 	// Send the request to the good controller
 	Router::execute($_GET['uri']);

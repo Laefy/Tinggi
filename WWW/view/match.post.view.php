@@ -1,5 +1,5 @@
 <div class="caption">
-  <h3><?=$post->getTitle()?></h3>
+  <h2><?=$post->getTitle()?></h2>
   <?php
     \controller\PostController::makeBaliseFromDesc($post->getDesc());
   ?>

@@ -56,7 +56,7 @@ class UserController extends Controller{
       "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
       //Vérification pour l'image de profil à faire
     ]);
-    $error = !isempty($errors);
+    $error = !empty($errors);
 
     // Enregistrer l'utilisateur dans la BDD //
     if(!$error && !\model\User::getByLogin(\Accesor::post("login", "string")) && !\model\User::getByLogin(\Accesor::post("email", "string"))){
@@ -91,7 +91,7 @@ class UserController extends Controller{
       "password"=>["string"=>["min"=>8, "max" => 50]],
       "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
     ]);
-    $error = !isempty($errors);
+    $error = !empty($errors);
 
     // Faire les validations
     if(!$error){
@@ -129,7 +129,7 @@ class UserController extends Controller{
       "password"=>["string"=>["min"=>8, "max" => 50]]
     ]);
 
-    $error = !isempty($errors);
+    $error = !empty($errors);
     if(!$error){
       $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
       $user = \model\User::getById($id_user);
@@ -145,7 +145,7 @@ class UserController extends Controller{
         "error" => $error,
         "errors" => $errors
       );
-      $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $data);
+      $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $datas);
     }
   }
 

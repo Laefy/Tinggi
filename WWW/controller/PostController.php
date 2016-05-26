@@ -11,7 +11,7 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user = \model\User::getById(3);
+      $VIEW_user = NULL;
     }
     $VIEW_posts;
     $session_Match = \Session::getMatch();
@@ -34,14 +34,14 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user = \model\User::getById(1);
+      $VIEW_user = NULL;
     }
 
     $VIEW_posts = \model\Post::getTopTen();
     $data = array(
         "posts" => $VIEW_posts
       );
-    $render = new Renderer('Tinggy - Top', 'top.view.php', $VIEW_user, $data);
+    $render = new \view\Renderer('Tinggy - Top', 'top.view.php', $VIEW_user, $data);
     $render->render();
   }
 
@@ -50,7 +50,7 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user = \model\User::getById(1);
+      $VIEW_user = NULL;
     }
 
     $VIEW_post = \model\Post::getPostById($id);
@@ -59,7 +59,7 @@ class PostController extends Controller{
       'post' => $VIEW_post
     );
 
-    $render = new Renderer('Tinggy - '.$VIEW_post->getTitle(), 'read.view.php', $VIEW_user, $data);
+    $render = new \view\Renderer('Tinggy - '.$VIEW_post->getTitle(), 'read.view.php', $VIEW_user, $data);
     $render->render();
   }
 
@@ -68,12 +68,16 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user = \model\User::getById(1);
+      $VIEW_user = NULL;
     }
 
-    $data = array();
-    $render = new \view\Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, $data);
-    $render->render();
+    if($VIEW_user){
+      $render = new \view\Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, NULL);
+      $render->render();
+    } else {
+      $response = new \view\Response('redirect', 'signup');
+      $response->send();
+    }
   }
 
   public function match($postID){
@@ -84,18 +88,29 @@ class PostController extends Controller{
     $post = \model\Post::getPostById($postID);
     $post->toggleLike();
 
-    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
+    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response->send();
   }
 
   public function dislike($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleDislike();
+  }
 
-    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
+  static function parseDescription($desc,$url){
+    if(preg_match('/\.(jpg|png|gif|ppm)$/i',$url)){
+      return 'img:'.$url.'\n'.$desc;
+    }
+    else if(preg_match('/^(http|https):\/\/(www\.)?(youtube.com|vimeo.com)\/.*/i',$url)){
+      return 'vid:'.$url.'\n'.$desc;
+    }
+    else{
+      return $desc;
+    }
   }
 
   public function send(){
-    $error = $false;
+    $error = false;
 
     // Faire les validations
     $errors = \Accesor::checkPost([
@@ -103,22 +118,25 @@ class PostController extends Controller{
       "url"=>["string"=>["min"=>1, "max" => 100]],
       "description"=>["string"=>["min"=>1]],
     ]);
-    $error = !isempty($errors);
-    // Enregistrer l'utilisateur dans la BDD
+    $error = !empty($errors);
 
-    // Enregistrer l'utilisateur dans la session
-
-    if($error){
-      $response = new \view\Response('redirect', '');
+    if(!$error){
+      $post = new \model\Post(\Accesor::post('title','string'),
+                              self::parseDescription(\Accesor::post('description','string'),
+                              \Accesor::post('url','string')),
+                              \model\User::getById(1));
+      print_r($post);
+      $post->save();
+      $response = new \view\Response('redirect', 'match');
     } else {
       $response = new \view\Response('redirect', 'signup');
     }
-    $response->send();
+    $response->send(NULL);
   }
 
 
   public static function getPostDescPattern(){
-    return '/^((?P<mediaType>\w+):\s*(?P<mediaContent>[a-zA-Z0-9\/\_\.:]+)\s)?(?P<postDesc>.*)/';
+    return '/^((?P<mediaType>\w+):\s*(?P<mediaContent>[a-zA-Z0-9\/\_\.:=\?]+)\s)?(?P<postDesc>.*)/';
   }
 
   public static function makeBaliseFromDesc($desc){
@@ -128,7 +146,7 @@ class PostController extends Controller{
             echo '<img class="img_match" src="',\Router::$ROOT,'data/img/',$matches['mediaContent'],'">';
           break;
         case 'vid':
-            echo '<iframe src="',$matches['mediaContent'],'" frameborder="0" allowfullscreen></iframe>';
+            echo '<iframe src="',str_replace('watch?v=','embed/',$matches['mediaContent']),'" frameborder="0" allowfullscreen></iframe>';
             break;
         default:
           echo $matches['postDesc'];

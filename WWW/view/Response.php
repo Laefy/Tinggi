@@ -14,8 +14,8 @@ class Response{
   public function send($param) {
     switch ($this->type) {
       case 'error': $this->sendError($param['title'],$param['msg']); break;
-      case 'json': $this->sendJson($data); break;
-      case 'redirect': $this->sendRedirect($path); break;
+      case 'json': $this->sendJson($this->data); break;
+      case 'redirect': $this->sendRedirect($this->path); break;
       default: break;
     }
   }

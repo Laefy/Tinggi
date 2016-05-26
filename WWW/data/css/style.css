@@ -5,7 +5,11 @@
  */
 
  
- /* Modif Sophie */
+ /* Modif */
+ 
+ .size{
+	 font-size:3em;
+ }
  #crosse{
 	 position:fixed;
 	 right:2%;
@@ -17,25 +21,98 @@
 	width:100%;
 	height:100%;
 	position:relative;
-    display: table-cell;
-    vertical-align: middle;
  }
-.img_match{	
+.caption img{	
 	width:100%;
+	z-index:90;
 }
-.img_sup{
-    padding-top:50%;
-}
-
-.like_match{
-	height:100%;
-	position:absolute;
-	left:0;
-	top:0;
-	width:100%;
-	height:100%;
+.like_match img{
+	width:50%;
 	display: table-cell;
     vertical-align: middle;
+	z-index:1;
+}
+.col-md-1{
+	display:block;
+	width:100%;
+}
+.img-responsive.like{
+	width:50px;
+	display:inline;
+	float:right;
+	margin:5px;
+	  transition:  1s;
+    -webkit-transition: 1s;
+}
+
+
+.like{
+position:relative;
+float: left;
+margin: 5px;
+}
+
+
+
+.like_hover{
+position:absolute;
+opacity:1;
+}
+
+.like_before_hover{
+opacity:1;
+  transition:  0.5s;
+    -webkit-transition: 0.5s;
+}
+
+.like_before_hover:hover{
+opacity:0;
+}
+
+.like_hover:hover{
+opacity:1;
+}
+.nombrejaime{
+	margin-left:10px;
+	margin-top:5px;
+	font-size:200%;
+	display:inline;
+	float:right;
+}
+#view{
+	text-align:left !important;
+}
+
+.description{
+	background-color:white;
+	padding:10px;
+	color:black;
+}
+.commentaire{
+	margin-top:10px;
+	margin-bottom:10px;
+	padding-top:5px;
+	padding-bottom:4px;
+	padding-left:20px;
+	border:1px solid white;
+}
+.commentaire:hover{
+	background-color:white;
+	color:#FF4D00;
+	transition:0.5s;
+	-webkit-transition:0.5s;
+}
+.like_match{	
+	position:absolute;
+}
+.class_match.left{
+	right:0;
+}
+.like_match {
+	width:100%;
+	height:100%;
+	left:0;
+	top:0;
 	opacity:0;
 }
 
@@ -45,9 +122,48 @@
 	transition:0.5s;
 	-webkit-transition:0.5s;
 }
-
-.thumbnail{
-	width:90%
+.img_sup{
+	width:20%;
+}
+.thumbnail, .caption{
+	padding:0;
+}
+.match.title{
+	font-size:3em;
+}
+@media (min-width: 992px){
+	
+	.thumbnail{
+		width:90%;
+	}
+	.thumbnail.left{
+		margin-left:10%;
+	}
+	
+	.description.left, .commentaire.left, .like.left{
+		margin-left:10%;
+	}
+	.col-md-6 .match_title.left{
+		margin-left:10%;
+	}
+	.description, .commentaire{
+		width:90%;
+	}
+}
+@media (max-width: 992px){
+	.thumbnail{
+		width:100%;
+	}
+	
+	.description.left, .commentaire.left, .like.left{
+		margin-left:0%;
+	}
+	.col-md-6 .match_title.left{
+		margin-left:0%;
+	}
+	.description, .commentaire{
+		width:100%;
+	}
 }
 body {
     overflow-x: hidden;

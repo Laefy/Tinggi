@@ -14,19 +14,19 @@ class Renderer{
     $this->data = $data;
   }
   private static function render_header($VIEW_title){
-    include 'view/common/header.view.php';
+    include \Router::$WEBROOT.'view/common/header.view.php';
   }
 
   private static function render_footer(){
-    include 'view/common/footer.view.php';
+    include \Router::$WEBROOT.'view/common/footer.view.php';
   }
 
   private static function render_nav($VIEW_user){
-    include 'view/common/nav.view.php';
+    include \Router::$WEBROOT.'view/common/nav.view.php';
   }
 
   public static function render_one($view, $data){
-    include 'view/'.$view;
+    include \Router::$WEBROOT.'view/'.$view;
   }
 
   public function render(){
@@ -40,7 +40,7 @@ class Renderer{
   public static function renderError($VIEW_errorTitle, $VIEW_errorMsg) {
     self::render_header($VIEW_errorTitle);
     self::render_nav($this->currentUser);
-    include 'view/common/error.view.php';
+    include \Router::$WEBROOT.'view/common/error.view.php';
     self::render_footer();
   }
 

@@ -127,7 +127,7 @@ class Database {
 		$i = 0;
 
 		for($i = 0; $i < $count; ++$i) {
-			$req .= ' '.$parameters[i];
+			$req .= ' '.$parameters[$i];
 			if($i < $last)
 			{
 				$req .= ',';

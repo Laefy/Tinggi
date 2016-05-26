@@ -76,7 +76,7 @@ class PostController extends Controller{
       $render->render();
     } else {
       $response = new \view\Response('redirect', 'signup');
-      $response->send();
+      $response->send(NULL);
     }
   }
 
@@ -89,7 +89,7 @@ class PostController extends Controller{
     $post->toggleLike();
 
     $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
-    $response->send();
+    $response->send(NULL);
   }
 
   public function dislike($postID){
@@ -97,6 +97,7 @@ class PostController extends Controller{
     $post->toggleDislike();
   }
 
+<<<<<<< HEAD
   static function parseDescription($desc,$url){
     if(preg_match('/\.(jpg|png|gif|ppm)$/i',$url)){
       return 'img:'.$url.'\n'.$desc;
@@ -131,6 +132,7 @@ class PostController extends Controller{
     } else {
       $response = new \view\Response('redirect', 'signup');
     }
+    //$response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
     $response->send(NULL);
   }
 

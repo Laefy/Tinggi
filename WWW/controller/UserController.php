@@ -131,21 +131,28 @@ class UserController extends Controller{
 
     $error = !empty($errors);
     if(!$error){
-      $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
-      $user = \model\User::getById($id_user);
-      \Session::signIn($user);
-      array_push($errors,["Identifiants incorrects."]);
+    $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
+
+      if(empty($id_user)){
+        array_push($errors,["Identifiants incorrects."]);
+        $error = true;
+      }
     }
 
     if(!$error){
+      $user = \model\User::getById($id_user);
+      \Session::signIn($user);
+
       $response = new \view\Response('redirect', '');
-      $response->send();
+      $response->send(NULL);
     } else {
+
       $datas = array(
         "error" => $error,
         "errors" => $errors
       );
-      $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $datas);
+      $render = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $datas);
+      $render->render();
     }
   }
 
@@ -154,7 +161,7 @@ class UserController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     $data = array('user' => $VIEW_user);

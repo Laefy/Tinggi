@@ -5,10 +5,12 @@ class Response{
 
   private $type;
   private $path;
+  private $data;
 
   public function __construct($type,$path = null,$data = null) {
     $this->type = $type;
     $this->path = $path;
+    $this->data = $data;
   }
 
   public function send($param) {

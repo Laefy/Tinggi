@@ -45,7 +45,7 @@ class Session{
 	}
 	
 	public static function getUser(){
-		return self::$user->getId();
+		return self::$user;
 	}
 	
 	public static function isLogin(){

@@ -1,5 +1,6 @@
 <?php
-use view\Response as Response;
+use \view\Response as Response;
+use \view\Renderer as Renderer;
 namespace controller;
 
 class PostController extends Controller{
@@ -10,25 +11,17 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
-    $nbPost = \model\Post::getMaxId();
-    $postLeft = rand(1,$nbPost);
-    $postRight = 0;
-    do{
-      $postRight = rand(1,$nbPost);
-    }while($postLeft == $postRight);
-
-    $VIEW_postLeft = \model\Post::getPostById($postLeft);
-    $VIEW_postRight = \model\Post::getPostById($postRight);
+    $VIEW_posts = \model\Post::getMatchPosts();
 
     $data = array(
-        "user" => $VIEW_user,
-        "postLeft" => $VIEW_postLeft,
-        "postfRight" => $VIEW_postRight
-      );
-    $render = new Renderer('Tinggi - Match', 'match.view.php', $data);
+        "post1" => $VIEW_posts[0],
+        "post2" => $VIEW_posts[1]
+                  );
+    echo $data['post1']->getTitle();
+    $render = new \view\Renderer('Tinggi - Match', 'match.view.php',$VIEW_user, $data);
     $render->render();
   }
 
@@ -59,6 +52,11 @@ class PostController extends Controller{
 
     $VIEW_post = \model\Post::getPostById($id);
 
+    $data = array(
+      'user' => $VIEW_user,
+      'post' => $VIEW_post
+    );
+
     $render = new Renderer('Tinggi - '.$VIEW_post->getTitle(), 'read.view.php', $data);
     $render->render();
   }
@@ -71,8 +69,29 @@ class PostController extends Controller{
       $VIEW_user == NULL;
     }
 
-    $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php');
+    $data = array(
+      'user' => $VIEW_user
+    );
+    $render = new Renderer('Tinggi - Nouveau poste', 'create.view.php', $data);
     $render->render();
+  }
+
+  public function match($postID){
+
+  }
+
+  public function like($postID){
+    $post = \model\Post::getPostById($postID);
+    $post->toggleLike();
+
+    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
+  }
+
+  public function dislike($postID){
+    $post = \model\Post::getPostById($postID);
+    $post->toggleDislike();
+
+    echo '{ "user":' . $post->getUserScore() . ', "global":' . $post->getScore() . ' }';
   }
 
 }

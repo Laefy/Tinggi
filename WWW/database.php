@@ -1,16 +1,20 @@
 <?php
 class Database {
 
-	private static $host = 'localhost';
-	private static $dbname = "Tinggi";
-	private static $user = "root";
-	private static $password = "root";
+	private static $host = '127.0.0.1';
+	private static $dbname = 'Tinggi';
+	private static $user = 'root';
+	private static $password = '';
 	private static $pdo = null;
 
 	public static function getInstance(){
-		if(is_null(self::$pdo))
-		{
-			self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname.';charset=UTF-8', self::$user, self::$password);
+		if(is_null(self::$pdo)){
+			try {
+					self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname, self::$user, self::$password);
+			}
+			catch( PDOException $Exception ) {
+    		echo $Exception->getMessage( ) , $Exception->getCode( );
+			}
 		}
 		return self::$pdo;
 	}
@@ -35,7 +39,7 @@ class Database {
 		$i = 0;
 
 		for($i = 0; $i < $count; ++$i) {
-			$req .= ' '.$elements[i];
+			$req .= ' '.$elements[$i];
 			if($i < $last)
 			{
 				$req .= ',';
@@ -128,6 +132,7 @@ class Database {
 			}
 		}
 		$req.=');';
+		return self::query($req);
 	}
 
 	public static function delete($id,$table){

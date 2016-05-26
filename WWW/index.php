@@ -22,6 +22,10 @@
 	Router::addRoute('top', 'controller\PostController', 'top');
 	Router::addRoute('post/(\d+)', 'controller\PostController', 'read');
 	Router::addRoute('post/new', 'controller\PostController', 'create');
+	Router::addRoute('post/toggleLike/(\d+)', 'controller\PostController', 'like');
+	Router::addRoute('post/toggleDislike/(\d+)', 'controller\PostController', 'dislike');
+
+	Router::addRoute('post/comment/(\d+)', 'controller\CommentController', 'send');
 
 	// Send the request to the good controller
 	Router::execute($_GET['uri']);

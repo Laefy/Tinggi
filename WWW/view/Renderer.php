@@ -4,10 +4,14 @@ class Renderer{
 
   private $title;
   private $view;
+  private $currentUser;
+  private $data;
 
-  function __construct($title, $view){
+  function __construct($title, $view, $currentUser, $data){
     $this->title = $title;
     $this->view = $view;
+    $this->currentUser =$currentUser;
+    $this->data = $data;
   }
   private static function render_header($VIEW_title){
     include 'view/common/header.view.php';
@@ -25,11 +29,11 @@ class Renderer{
     include 'view/'.$view;
   }
 
-  public function render($data){
+  public function render(){
     self::render_header($this->title);
     self::render_nav();
     if(isset($this->view))
-      self::render_one($this->view, $data);
+      self::render_one($this->view, $this->data);
     self::render_footer();
   }
 

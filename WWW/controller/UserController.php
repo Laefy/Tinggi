@@ -4,19 +4,20 @@ namespace controller;
 class UserController extends Controller{
 
   public function signIn() {
-    $render = new Renderer('Tinggi - Connexion', 'common/login.view.php');
+    $data = array();
+    $render = new Renderer('Tinggi - Connexion', 'common/login.view.php', $data);
     $render->render();
   }
 
   public function signOut() {
-    \Session::destroy();
+    \Session::reset();
     $response = new Response('redirect', '');
     $response->send();
   }
 
   public function signUp() {
-    $VIEW_user == NULL;
-    $render = new Renderer('Tinggi - Inscription', 'profile.view.php');
+    $data = array('user' => NULL);
+    $render = new Renderer('Tinggi - Inscription', 'profile.view.php', $data);
     $render->render();
   }
 
@@ -27,10 +28,10 @@ class UserController extends Controller{
     } else {
       $VIEW_user == NULL;
     }
-
-    $render = new Renderer('Tinggi - Modifier votre profile', 'profile.view.php');
+    $data = array('user' => $VIEW_user);
+    $render = new Renderer('Tinggi - Modifier votre profile', 'profile.view.php', $data);
     $render->render();
   }
-
+  
 }
 ?>

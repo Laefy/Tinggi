@@ -4,6 +4,8 @@ class Session{
 	private static $user;
 	private static $auth;
 	private static $salt;
+	private static $id1;
+	private static $id2;
 
   public static function init(){
 			session_start();
@@ -24,7 +26,8 @@ class Session{
 
 	private static function connection(){
 
-			if( (isset($_SERVER['auth'])) && (isset($_SERVER['user_id'])) ){
+			if( (isset($_SERVER['auth'])) && (isset($_SERVER['user_id'])) )
+			{
 				if(strcmp(encrypt(self::$auth,self::getUserInformation()) == 0)){
 					if($_SERVER['user_id'] != 0)
 					{
@@ -40,21 +43,39 @@ class Session{
 			$_SERVER['auth'] = self::getUserInformation();
 			$_SERVER['user_id'] = 0;
 	}
-
+	
 	public static function getUser(){
 		return self::$user;
 	}
-
+	
 	public static function isLogin(){
-		return !is_null(self::$user);
+		return is_null(self::$user);	
 	}
 	/*-------PAS FINIS--------------------------------*/
 	/*public static function login($pseudo, $key){
 		if())
 			return true;
-		return false;
+		return false;		
 	}*/
 	
+	public static function getMatch(){
+		
+		if($id1 != null && $id2 != null){		
+			return $match = array($id1,$id2);		
+		}
+		return null;
+		
+	}
+	
+	public static function saveMatch($lambda,$lambda2){
+		self::$id1 = $lambda;
+		self::$id2 = $lambda2;
+	}
+	
+	public static function resetMatch(){
+		self::$id1 = null;
+		self::$id2 = null;
+	}
 	public static function reset(){
 		session_destroy();
 		session_start();

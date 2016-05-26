@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#page-top">Tinggi</a>
+            <a class="navbar-brand" href="match">Tinggi</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -29,7 +29,7 @@
                   }
                   else{
                     echo '<li class="page-scroll">
-                        <a href="user/',$pseudo,'">Compte</a>
+                        <a href="user/',$VIEW_user->getLogin(),'">Compte</a>
                     </li>
                     <li class="page-scroll">
                         <a href="signout">Deconnexion</a>

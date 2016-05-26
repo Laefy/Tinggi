@@ -22,16 +22,3 @@
     <script src="data/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 <body id="page-top" class="index">
-  <header>
-   <img src="data/img/crosse.png" alt="croix" id="crosse"></img>
-   <div class="container">
-     <div class="row">
-       <div class="col-lg-12">
-         <div class="intro-text">
-           <span class="name">MATCH UP</span>
-           <span class="desc">VS</span>
-         </div>
-       </div>
-     </div>
-   </div>
- </header>

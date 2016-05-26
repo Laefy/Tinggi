@@ -13,14 +13,29 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="page-scroll">
-                    <a href="">Match</a>
+                    <a href="match">Match</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="">Top</a>
+                    <a href="top">Top</a>
                 </li>
-                <li class="page-scroll">
-                    <a href="">Connexion</a>
-                </li>
+                <?php
+                  if(is_null($VIEW_user)){
+                    echo '<li class="page-scroll">
+                        <a href="signup">Inscription</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="signin">Connexion</a>
+                    </li>';
+                  }
+                  else{
+                    echo '<li class="page-scroll">
+                        <a href="user/',$pseudo,'">Compte</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="signout">Deconnexion</a>
+                    </li>';
+                  }
+                ?>
             </ul>
         </div>
     </div>

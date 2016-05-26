@@ -1,10 +1,10 @@
 <?php
 class Database {
 
-	private static $host = '127.0.0.1:3307';
+	private static $host = '127.0.0.1';
 	private static $dbname = 'Tinggi';
-	private static $user = 'Test';
-	private static $password = 'test';
+	private static $user = 'root';
+	private static $password = '';
 	private static $pdo = null;
 
 	public static function getInstance(){
@@ -72,6 +72,7 @@ class Database {
 		$last = $count - 1;
 		$req = 'INSERT INTO '.$table.'(';
 		$values = ' VALUES (';
+		$i=0;
 		foreach ($elements as $key => $value) {
 			$req.= $key;
 			$values.= $value;
@@ -81,6 +82,7 @@ class Database {
 				$req .= ',';
 				$values .= ',';
 			}
+			$i++;
 		}
 		$req.= ')'.$values.');';
 		return self::queryVoid($req);

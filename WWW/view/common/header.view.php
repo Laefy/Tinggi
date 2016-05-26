@@ -5,15 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>
-      <?php
-        echo $VIEW_title;
-      ?>
-    </title>
+    <title><?= $VIEW_title ?></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" href="data/img/touch-icon.png">
-
     <link rel="stylesheet" href="data/css/bootstrap.min.css">
     <link href="data/css/style.css" rel="stylesheet">
     <link href="data/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">

@@ -14,7 +14,7 @@
   <div class="container-fluid">
       <div class="row">
           <div class="col-md-4 col-md-offset-4">
-            <form>
+            <form method="post" action="signup/new">
               <div class="form-group">
                 <input type="login" class="form-control" id="login" placeholder="pseudo">
               </div>

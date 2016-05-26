@@ -7,13 +7,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#page-top">Tinggi</a>
+            <a class="navbar-brand" href="#page-top">Tinggy</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="page-scroll">
-                    <a href="match">Match</a>
+                    <a href="">Match</a>
                 </li>
                 <li class="page-scroll">
                     <a href="top">Top</a>

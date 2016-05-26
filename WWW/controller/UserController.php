@@ -48,25 +48,40 @@ class UserController extends Controller{
   public function validsignup(){
     $error = false;
 
-    // Faire les validations
+    // Faire les validations //
     $errors = \Accesor::checkPost([
       "login"=>["string"=>["min" => 5, "max" => 30]],
       "email"=>["string"=>["min"=>10, "max" => 50]],
       "password"=>["string"=>["min"=>8, "max" => 50]],
       "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
+      //Vérification pour l'image de profil à faire
     ]);
     $error = !isempty($errors);
 
-    // Enregistrer l'utilisateur dans la BDD
+    // Enregistrer l'utilisateur dans la BDD //
+    if(!$error && !\model\User::getByLogin(\Accesor::post("login", "string")) && !\model\User::getByLogin(\Accesor::post("email", "string"))){
+      $img = \Accesor::post("img", "file");
+      $new_user = new \model\User(\Accesor::post("email", "string"), \Accesor::post("login", "string"), $img, 0);
+      $new_user->save();
+      $new_user->setPassword(\Session::encrypt(\Accesor::post("password", "string")));
 
-    // Enregistrer l'utilisateur dans la session
-
-    if($error){
-      $response = new \view\Response('redirect', '');
+      // Enregistrer l'utilisateur dans la session //
+      \Session::signIn($new_user);
     } else {
-      $response = new \view\Response('redirect', 'signup');
+      $error = true;
+      array_push($errors, "Login ou adresse mail déjà utilisé.");
     }
-    $response->send();
+
+    if(!$error){
+      $response = new \view\Response('redirect', '');
+      $response->send();
+    } else {
+      $datas = array(
+        "error" => $error,
+        "errors" => $errors
+      );
+      $renderer = new \view\Renderer('Tinggy - Inscription', NULL, $datas);
+    }
   }
   public function validmodif($id){
     $error = false;
@@ -80,34 +95,61 @@ class UserController extends Controller{
     $error = !isempty($errors);
 
     // Faire les validations
-
-    // Enregistrer l'utilisateur dans la session
-
-    // Enregistrer l'utilisateur dans la BDD
-
-    if($error){
-      $response = new \view\Response('redirect', '');
-    } else {
-      $response = new \view\Response('redirect', 'user/'.(\Session::getUser().getLogin()));
+    if(!$error){
+      if(\Session::isLogin()){
+        $update_user = \Session::getUser();
+        $update_user->setLogin(\Accesor::post("login", "string"));
+        $update_user->setMail(\Accesor::post("email", "string"));
+        $update_user->setImage(\Accesor::post("img", "file"));
+        $update_user->update();
+        \Session::signIn($update_user);
+        $update_user->setPassword(\Session::encrypt(\Accesor::post("password", "string")));
+      } else {
+        $error = true;
+      }
     }
-    $response->send();
+
+    if(!$error){
+      $response = new \view\Response('redirect', '');
+      $response->send();
+    } else {
+      $VIEW_user = \Session::getUser();
+      $datas = array(
+        "error" => $error,
+        "erreors" => $errors
+      );
+      $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', $VIEW_user, $datas);
+    }
   }
 
   public function validsignin(){
     $error = false;
 
-    extract($_POST);
+    $errors = \Accesor::checkPost([
+      "login"=>["string"=>["min" => 5, "max" => 30]],
+      "email"=>["string"=>["min"=>10, "max" => 50]],
+      "password"=>["string"=>["min"=>8, "max" => 50]],
+      "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
+    ]);
 
-    // Faire les validations
-
-    // Enregistrer l'utilisateur dans la session
-
-    if($error){
-      $response = new \view\Response('redirect', '');
-    } else {
-      $response = new \view\Response('redirect', 'erreur');
+    $error = !isempty($errors);
+    if(!$error){
+      $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
+      $user = \model\User::getById($id_user);
+      \Session::signIn($user);
+      array_push($errors,["Identifiants incorrects."]);
     }
-    $response->send();
+
+    if(!$error){
+      $response = new \view\Response('redirect', '');
+      $response->send();
+    } else {
+      $datas = array(
+        "error" => $error,
+        "errors" => $errors
+      );
+      $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $data);
+    }
   }
 
   public function tops(){

@@ -41,6 +41,16 @@ class User {
     return User::userFromRow($row);
   }
 
+  public static function getByLogin($login) {
+    $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('login' => $login));
+    return count($rows) > 0 ? userFromRow($rows[0]) : NULL;
+  }
+
+  public static function getByMail($mail) {
+    $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('mail' => $mail));
+    return count($rows) > 0 ? userFromRow($rows[0]) : NULL;
+  }
+
   public function loadPosts() {
     $this->posts = Post::getPostsByUser($this);
   }

@@ -3,7 +3,6 @@
 namespace model;
 class Post {
     private $id;
-    private $type;
     private $title;
     private $desc;
     private $time;
@@ -11,9 +10,8 @@ class Post {
     private $comments;
     private $score;
 
-    public function __construct($id, $type, $title, $desc, $time, $author, $comment, $score) {
+    public function __construct($id, $title, $desc, $time, $author, $comment, $score) {
          $this->id = $id;
-         $this->type = $type;
          $this->title = $title;
          $this->desc = $desc;
          $this->time = $time;
@@ -34,10 +32,6 @@ class Post {
         return $this->desc;
     }
 
-    public function getType(){
-        return $this->type;
-    }
-
     public function getTime(){
         return $this->time;
     }
@@ -55,7 +49,7 @@ class Post {
     }
 
     private static function postFromRow($row) {
-        return new Post($row['id'], $row['type'], $row['title'], $row['desc'], $row['time'], User::getById($row['author']), 0, 0);
+        return new Post($row['id'], $row['title'], $row['desc'], $row['time'], User::getById($row['author']), 0, 0);
     }
 
     public static function getPostById($id){
@@ -81,7 +75,7 @@ class Post {
     }
 
     public function save(){
-        \Database::insert(array('id' => $this->id, 'type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
+        \Database::insert(array('id' => $this->id, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
     }
 
     public function loadComments() {
@@ -94,10 +88,6 @@ class Post {
 
     public function setDesc($desc){
         $this->desc = $desc;
-    }
-
-    public function setType($type){
-        $this->type = $type;
     }
 
     public function setAuthor($author){

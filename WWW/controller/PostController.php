@@ -88,5 +88,27 @@ class PostController extends Controller{
 
   }
 
+  public static function getPostDescPattern(){
+    return '/^((?P<mediaType>\w+):\s*(?P<mediaContent>\d+)\n)?(?P<postDesc>.*)/';
+  }
+
+  public static function makeBaliseFromDesc($desc){
+    if(preg_match(self::getPostDescPattern(),$desc, $matches)){
+      print_r($matches);
+      /*switch ($matches) {
+        case 'value':
+          # code...
+          break;
+
+        default:
+          # code...
+          break;
+      }*/
+    }
+    else{
+      echo 'Contenu indisponible';
+    }
+  }
+
 }
 ?>

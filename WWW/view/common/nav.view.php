@@ -20,9 +20,21 @@
                 <li class="page-scroll">
                     <a href="">Stats</a>
                 </li>
-                <li class="page-scroll">
-                    <a href="">Connexion</a>
-                </li>
+                <?php
+                if(isset($VIEW_user)){
+                  echo '<li class="page-scroll">
+                        <a href="">Mon Compte</a>
+                        </li>
+                        <li class="page-scroll">
+                        <a href="">Deconnexion</a>
+                        </li>';
+                }
+                else{
+                  echo '<li class="page-scroll">
+                      <a href="">Connexion</a>
+                      </li>';
+                }
+                ?>
             </ul>
         </div>
     </div>

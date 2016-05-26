@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2016 at 09:39 PM
+-- Generation Time: May 26, 2016 at 08:57 AM
 -- Server version: 5.7.9
 -- PHP Version: 5.6.16
 
@@ -52,6 +52,10 @@ ELSE
 
 END IF;
 
+SELECT love
+FROM score_post
+WHERE id_user = user AND id_post = post;    
+
 END$$
 
 DROP PROCEDURE IF EXISTS `TOGGLE_LIKE`$$
@@ -69,6 +73,11 @@ ELSE
     WHERE id_user = user AND id_post = post;
 
 END IF;
+
+SELECT love
+FROM score_post
+WHERE id_user = user AND id_post = post;
+    
 
 END$$
 
@@ -148,12 +157,26 @@ DELIMITER ;
 DROP VIEW IF EXISTS `best_posts`;
 CREATE TABLE IF NOT EXISTS `best_posts` (
 `id` int(11)
-,`type` enum('EMBED','PHOTO','TEXT','IFRAME')
 ,`title` varchar(50)
 ,`description` text
 ,`time` timestamp
 ,`author` int(11)
 ,`score` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `best_users`
+-- (See below for the actual view)
+--
+DROP VIEW IF EXISTS `best_users`;
+CREATE TABLE IF NOT EXISTS `best_users` (
+`id` int(11)
+,`pseudo` varchar(30)
+,`mail` varchar(50)
+,`img` varchar(200)
+,`score` decimal(32,0)
 );
 
 -- --------------------------------------------------------
@@ -183,7 +206,6 @@ CREATE TABLE IF NOT EXISTS `comment` (
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE IF NOT EXISTS `post` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` enum('EMBED','PHOTO','TEXT','IFRAME') NOT NULL DEFAULT 'TEXT',
   `title` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -196,10 +218,10 @@ CREATE TABLE IF NOT EXISTS `post` (
 -- Dumping data for table `post`
 --
 
-INSERT INTO `post` (`id`, `type`, `title`, `description`, `time`, `author`) VALUES
-(1, 'TEXT', 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1),
-(2, 'TEXT', 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
-(3, 'TEXT', 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3);
+INSERT INTO `post` (`id`, `title`, `description`, `time`, `author`) VALUES
+(1, 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1),
+(2, 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
+(3, 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3);
 
 -- --------------------------------------------------------
 
@@ -210,7 +232,6 @@ INSERT INTO `post` (`id`, `type`, `title`, `description`, `time`, `author`) VALU
 DROP VIEW IF EXISTS `post_view`;
 CREATE TABLE IF NOT EXISTS `post_view` (
 `id` int(11)
-,`type` enum('EMBED','PHOTO','TEXT','IFRAME')
 ,`title` varchar(50)
 ,`description` text
 ,`time` timestamp
@@ -255,8 +276,9 @@ CREATE TABLE IF NOT EXISTS `score_post` (
 
 INSERT INTO `score_post` (`id_user`, `id_post`, `love`) VALUES
 (1, 1, -1),
+(1, 2, 1),
 (2, 2, 1),
-(2, 3, 2),
+(2, 3, 0),
 (3, 3, -1);
 
 -- --------------------------------------------------------
@@ -309,7 +331,16 @@ CREATE TABLE IF NOT EXISTS `user_view` (
 --
 DROP TABLE IF EXISTS `best_posts`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts`  AS  select `post_view`.`id` AS `id`,`post_view`.`type` AS `type`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` order by `post_view`.`score` desc limit 10 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts`  AS  select `post_view`.`id` AS `id`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` order by `post_view`.`score` desc limit 10 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `best_users`
+--
+DROP TABLE IF EXISTS `best_users`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_users`  AS  select `user_view`.`id` AS `id`,`user_view`.`pseudo` AS `pseudo`,`user_view`.`mail` AS `mail`,`user_view`.`img` AS `img`,`user_view`.`score` AS `score` from `user_view` order by `user_view`.`score` desc limit 10 ;
 
 -- --------------------------------------------------------
 
@@ -318,7 +349,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `post_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `post_view`  AS  select `p`.`id` AS `id`,`p`.`type` AS `type`,`p`.`title` AS `title`,`p`.`description` AS `description`,`p`.`time` AS `time`,`p`.`author` AS `author`,`GET_SCORE_POST`(`p`.`id`) AS `score` from `post` `p` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `post_view`  AS  select `p`.`id` AS `id`,`p`.`title` AS `title`,`p`.`description` AS `description`,`p`.`time` AS `time`,`p`.`author` AS `author`,`GET_SCORE_POST`(`p`.`id`) AS `score` from `post` `p` ;
 
 -- --------------------------------------------------------
 

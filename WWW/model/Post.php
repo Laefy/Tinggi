@@ -61,7 +61,7 @@ class Post {
     }
 
     private static function postFromRow($row) {
-        return new Post($row['id'], $row['type'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, $row['score']);
+        return new Post($row['id'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, $row['score']);
     }
 
     public static function getPostById($id){
@@ -78,10 +78,10 @@ class Post {
         $posts = array();
 
         foreach ($rows as $row) {
-            array_push(posts, Post::postFromRow($row));
+            array_push($posts, Post::postFromRow($row));
         }
 
-        return posts;
+        return $posts;
     }
 
     public function toggleLike() {

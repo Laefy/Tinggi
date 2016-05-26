@@ -72,6 +72,7 @@ class Database {
 		$last = $count - 1;
 		$req = 'INSERT INTO '.$table.'(';
 		$values = ' VALUES (';
+		$i=0;
 		foreach ($elements as $key => $value) {
 			$req.= $key;
 			$values.= $value;
@@ -81,6 +82,7 @@ class Database {
 				$req .= ',';
 				$values .= ',';
 			}
+			$i++;
 		}
 		$req.= ')'.$values.');';
 		return self::queryVoid($req);
@@ -125,7 +127,7 @@ class Database {
 		$i = 0;
 
 		for($i = 0; $i < $count; ++$i) {
-			$req .= ' '.$parameters[i];
+			$req .= ' '.$parameters[$i];
 			if($i < $last)
 			{
 				$req .= ',';

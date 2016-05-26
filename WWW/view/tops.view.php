@@ -41,7 +41,7 @@
     <div class="col-xs-10 col-xs-offset-1">
       <?php foreach ($posts as $post) { ?>
       <a href="#" class="thumbnail">
-        <?php include 'view/match.post.view.php';?>
+        <?php include \Router::$ROOT.'view/match.post.view.php';?>
       </a>
       <?php } ?>
     </div>

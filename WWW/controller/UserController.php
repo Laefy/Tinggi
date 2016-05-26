@@ -56,7 +56,7 @@ class UserController extends Controller{
       "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
       //Vérification pour l'image de profil à faire
     ]);
-    $error = !isempty($errors);
+    $error = !empty($errors);
 
     // Enregistrer l'utilisateur dans la BDD //
     if(!$error && !\model\User::getByLogin(\Accesor::post("login", "string")) && !\model\User::getByLogin(\Accesor::post("email", "string"))){
@@ -91,7 +91,7 @@ class UserController extends Controller{
       "password"=>["string"=>["min"=>8, "max" => 50]],
       "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
     ]);
-    $error = !isempty($errors);
+    $error = !empty($errors);
 
     // Faire les validations
     if(!$error){
@@ -129,23 +129,30 @@ class UserController extends Controller{
       "password"=>["string"=>["min"=>8, "max" => 50]]
     ]);
 
-    $error = !isempty($errors);
+    $error = !empty($errors);
     if(!$error){
-      $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
-      $user = \model\User::getById($id_user);
-      \Session::signIn($user);
-      array_push($errors,["Identifiants incorrects."]);
+    $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
+
+      if(empty($id_user)){
+        array_push($errors,["Identifiants incorrects."]);
+        $error = true;
+      }
     }
 
     if(!$error){
+      $user = \model\User::getById($id_user);
+      \Session::signIn($user);
+
       $response = new \view\Response('redirect', '');
-      $response->send();
+      $response->send(NULL);
     } else {
+
       $datas = array(
         "error" => $error,
         "errors" => $errors
       );
-      $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $data);
+      $render = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $datas);
+      $render->render();
     }
   }
 
@@ -154,7 +161,7 @@ class UserController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     $data = array('user' => $VIEW_user);

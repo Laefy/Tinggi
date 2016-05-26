@@ -30,3 +30,6 @@
     </div>
   </div>
 </section>
+<a href="post/new">
+  <img src="<?=\Router::$ROOT?>data/img/crosse.png" alt="croix" id="crosse"></img>
+</a>

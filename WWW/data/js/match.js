@@ -11,11 +11,10 @@ function selectWinner(element) {
 
 function makeNewMatch() {
 	var action = function(response) {
-		var matchNodes = document.getElementsByClassName('class_match');
-		var leftPost = matchNodes[0].children[0];
-		var leftImg = matchNodes[0].children[1];
-		var rightPost = matchNodes[1].children[0];
-		var rightImg = matchNodes[1].children[1];
+		var leftPost = document.getElementById('js-match-left-post').children[0];
+		var leftImg = document.getElementById('js-match-left-trigger');
+		var rightPost = document.getElementById('js-match-right-post').children[0];
+		var rightImg = document.getElementById('js-match-right-trigger');
 		
 		var data = JSON.parse(response);
 
@@ -29,7 +28,7 @@ function makeNewMatch() {
 }
 
 function initMatchView() {
-	var elements = document.getElementsByClassName('like_match');
+	var elements = [document.getElementById('js-match-left-trigger'), document.getElementById('js-match-right-trigger')];
 	for (var i = 0; i < elements.length; ++ i) {
 		elements[i].onclick = function() {
 			selectWinner(this);

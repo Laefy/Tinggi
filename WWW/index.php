@@ -24,9 +24,11 @@
 	Router::addRoute('user/top', 'controller\UserController', 'top');
 
 	Router::addRoute('', 'controller\PostController', 'index');
+  Router::addRoute('match', 'controller\PostController', 'index');
 	Router::addRoute('top', 'controller\PostController', 'top');
 	Router::addRoute('post/(\d+)', 'controller\PostController', 'read');
 	Router::addRoute('post/new', 'controller\PostController', 'create');
+	Router::addRoute('post/send', 'controller\PostController', 'send');
 	Router::addRoute('post/toggleLike/(\d+)', 'controller\PostController', 'like');
 	Router::addRoute('post/toggleDislike/(\d+)', 'controller\PostController', 'dislike');
 

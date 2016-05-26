@@ -47,7 +47,6 @@ class UserController extends Controller{
 
   public function validsignup(){
     $error = false;
-    $datas = [];
 
     // Faire les validations //
     $errors = \Accesor::checkPost([
@@ -58,7 +57,6 @@ class UserController extends Controller{
       //Vérification pour l'image de profil à faire
     ]);
     $error = !isempty($errors);
-    $datas = $errors;
 
     // Enregistrer l'utilisateur dans la BDD //
     if(!$error && !\model\User::getByLogin(\Accesor::post("login", "string")) && !\model\User::getByLogin(\Accesor::post("email", "string"))){
@@ -71,13 +69,17 @@ class UserController extends Controller{
       \Session::signIn($new_user);
     } else {
       $error = true;
-      $datas = ["Identifiants déjà utilisés."];
+      array_push($errors, "Login ou adresse mail déjà utilisé.");
     }
 
     if(!$error){
       $response = new \view\Response('redirect', '');
       $response->send();
     } else {
+      $datas = array(
+        "error" => $error,
+        "errors" => $errors
+      );
       $renderer = new \view\Renderer('Tinggy - Inscription', NULL, $datas);
     }
   }
@@ -111,7 +113,12 @@ class UserController extends Controller{
       $response = new \view\Response('redirect', '');
       $response->send();
     } else {
-      $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', NULL, $errors);
+      $VIEW_user = \Session::getUser();
+      $datas = array(
+        "error" => $error,
+        "erreors" => $errors
+      );
+      $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', $VIEW_user, $datas);
     }
   }
 
@@ -130,14 +137,18 @@ class UserController extends Controller{
       $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
       $user = \model\User::getById($id_user);
       \Session::signIn($user);
-      $errors = ["Identifiants incorrects."];
+      array_push($errors,["Identifiants incorrects."]);
     }
 
     if(!$error){
       $response = new \view\Response('redirect', '');
       $response->send();
     } else {
-      $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $errors);
+      $datas = array(
+        "error" => $error,
+        "errors" => $errors
+      );
+      $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $data);
     }
   }
 

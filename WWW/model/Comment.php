@@ -9,18 +9,20 @@ class Comment {
   private $text;
   private $score;
 
-  public function __construct($author,$target,$time,$text,$score){
+  public function __construct($author,$target,$text){
     $this->id = 0;
     $this->author = $author;
     $this->target = $target;
-    $this->time = $time;
+    $this->time = 0;
     $this->text = $text;
-    $this->score = $score;
+    $this->score = 0;
   }
 
   private static function commentFromRow($row) {
-    $comment = new Comment(User::getById($row['author']), NULL, $row['time'], $row['text'], $row['score']);
+    $comment = new Comment(User::getById($row['author']), NULL, $row['text']);
     $comment->id = $row['id'];
+    $comment->time = $row['time'];
+    $comment->score = $row['score'];
     return $comment;
   }
 

@@ -10,8 +10,8 @@ class CommentController extends Controller{
     } else {
       $VIEW_user == NULL;
     }
-    $comment = new Comment(0,$VIEW_user.getId(),$id,0,$_POST['comment'],0);
-    $coment->save();
+    $comment = new Comment($VIEW_user,\model\Post::getById($id),$_POST['comment']);
+    $comment->save();
     
     $response = new Response('redirect', 'post/'.$id);
     $response->send();

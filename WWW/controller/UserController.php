@@ -145,6 +145,7 @@ class UserController extends Controller{
         "error" => $error,
         "errors" => $errors
       );
+      print_r($_POST);
       $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $datas);
     }
   }
@@ -154,7 +155,7 @@ class UserController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     $data = array('user' => $VIEW_user);

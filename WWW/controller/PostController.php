@@ -50,7 +50,7 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     $VIEW_post = \model\Post::getPostById($id);
@@ -68,7 +68,7 @@ class PostController extends Controller{
     if(\Session::isLogin()){
       $VIEW_user = \Session::getUser();
     } else {
-      $VIEW_user == NULL;
+      $VIEW_user = NULL;
     }
 
     if($VIEW_user){
@@ -76,7 +76,7 @@ class PostController extends Controller{
       $render->render();
     } else {
       $response = new \view\Response('redirect', 'signup');
-      $response->send();
+      $response->send(NULL);
     }
   }
 
@@ -89,7 +89,7 @@ class PostController extends Controller{
     $post->toggleLike();
 
     $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
-    $response->send();
+    $response->send(NULL);
   }
 
   public function dislike($postID){
@@ -97,7 +97,7 @@ class PostController extends Controller{
     $post->toggleDislike();
 
     $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
-    $response->send();
+    $response->send(NULL);
   }
 
   public static function getPostDescPattern(){

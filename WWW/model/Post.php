@@ -11,14 +11,14 @@ class Post {
     private $score;
     private $userScore;
 
-    public function __construct($title, $desc, $time, $author, $comment, $score) {
+    public function __construct($title, $desc, $author) {
         $this->id = 0;
         $this->title = $title;
         $this->desc = $desc;
-        $this->time = $time;
+        $this->time = 0;
         $this->author = $author;
         $this->comments = array();
-        $this->score = $score;
+        $this->score = 0;
         $this->userScore = 0;
     }
 
@@ -54,9 +54,11 @@ class Post {
         return $this->userScore;
     }
 
-    private static function postFromRow($row) {
-        $post = new Post($row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, $row['score']);
+    private static function postFromRow($row, $user = NULL) {
+        $post = new Post($row['title'], $row['description'], $user == NULL ? User::getById($row['author']) : $user);
         $post->id = $row['id'];
+        $post->time = $row['time'];
+        $post->score = $row['score'];
         return $post;
     }
 
@@ -74,8 +76,7 @@ class Post {
         $posts = array();
 
         foreach ($rows as $row) {
-            $post = new Post($row['title'], $row['description'], $row['time'], $user, 0, $row['score']);
-            $post->id = $row['id'];
+            $post = postFromRow($row, $user);
             array_push($posts, $post);
         }
 

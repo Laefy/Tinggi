@@ -2,7 +2,6 @@
 namespace controller;
 
 class CommentController extends Controller{
-
   public function send($id) {
     $VIEW_user;
     if(\Session::isLogin()){
@@ -16,6 +15,5 @@ class CommentController extends Controller{
     $response = new Response('redirect', 'post/'.$id);
     $response->send();
   }
-
 }
 ?>

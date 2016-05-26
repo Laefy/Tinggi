@@ -72,5 +72,9 @@ class Comment {
   public function setScore($score){
     $this->score = $score;
   }
+
+  public function delete() {
+    \Database::delete($this->id, 'comment');
+  }
 }
 ?>

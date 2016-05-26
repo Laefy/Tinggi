@@ -127,7 +127,7 @@ class Post {
     }
 
     public function delete() {
-        
+        \Database::delete($this->id, 'post');
     }
 }
 ?>

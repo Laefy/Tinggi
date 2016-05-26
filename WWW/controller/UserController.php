@@ -80,12 +80,11 @@ class UserController extends Controller{
         "error" => $error,
         "errors" => $errors
       );
-      $renderer = new \view\Renderer('Tinggy - Inscription', NULL, $datas);
+      $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", NULL, $datas);
     }
   }
   public function validmodif($id){
     $error = false;
-
     $errors = \Accesor::checkPost([
       "login"=>["string"=>["min" => 5, "max" => 30]],
       "email"=>["string"=>["min"=>10, "max" => 50]],
@@ -127,9 +126,7 @@ class UserController extends Controller{
 
     $errors = \Accesor::checkPost([
       "login"=>["string"=>["min" => 5, "max" => 30]],
-      "email"=>["string"=>["min"=>10, "max" => 50]],
-      "password"=>["string"=>["min"=>8, "max" => 50]],
-      "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
+      "password"=>["string"=>["min"=>8, "max" => 50]]
     ]);
 
     $error = !isempty($errors);

@@ -101,7 +101,7 @@ class Post {
     }
 
     public function save(){
-        \Database::insert(array('id' => $this->id, 'type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()), 'post');
+        \Database::insert(array('type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()));
     }
 
     public function loadComments() {

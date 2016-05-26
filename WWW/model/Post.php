@@ -11,15 +11,15 @@ class Post {
     private $score;
     private $userScore;
 
-    public function __construct($id, $title, $desc, $time, $author, $comment, $score) {
-         $this->id = $id;
-         $this->title = $title;
-         $this->desc = $desc;
-         $this->time = $time;
-         $this->author = $author;
-         $this->comments = array();
-         $this->score = $score;
-         $this->userScore = 0;
+    public function __construct($title, $desc, $time, $author, $comment, $score) {
+        $this->id = 0;
+        $this->title = $title;
+        $this->desc = $desc;
+        $this->time = $time;
+        $this->author = $author;
+        $this->comments = array();
+        $this->score = $score;
+        $this->userScore = 0;
     }
 
     public function getId(){
@@ -55,7 +55,9 @@ class Post {
     }
 
     private static function postFromRow($row) {
-        return new Post($row['id'], $row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, $row['score']);
+        $post = new Post($row['title'], $row['description'], $row['time'], User::getById($row['author']), 0, $row['score']);
+        $post->id = $row['id'];
+        return $post;
     }
 
     public static function getPostById($id){
@@ -72,7 +74,8 @@ class Post {
         $posts = array();
 
         foreach ($rows as $row) {
-            $post = new Post($row['id'], $row['title'], $row['description'], $row['time'], $user, 0, $row['score']);
+            $post = new Post($row['title'], $row['description'], $row['time'], $user, 0, $row['score']);
+            $post->id = $row['id'];
             array_push($posts, $post);
         }
 

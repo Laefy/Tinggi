@@ -9,8 +9,8 @@ class Comment {
   private $text;
   private $score;
 
-  public function __construct($id,$author,$target,$time,$text,$score){
-    $this->id = $id;
+  public function __construct($author,$target,$time,$text,$score){
+    $this->id = 0;
     $this->author = $author;
     $this->target = $target;
     $this->time = $time;
@@ -19,7 +19,9 @@ class Comment {
   }
 
   private static function commentFromRow($row) {
-    return new Comment($row['id'], User::getById($row['author']), NULL, $row['time'], $row['text'], $row['score']);
+    $comment = new Comment(User::getById($row['author']), NULL, $row['time'], $row['text'], $row['score']);
+    $comment->id = $row['id'];
+    return $comment;
   }
 
   public static function getCommentsByPost($post) {

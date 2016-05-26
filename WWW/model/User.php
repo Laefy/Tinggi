@@ -9,8 +9,8 @@ class User {
   private $score;
   private $posts = array();
 
-  public function __construct($id, $mail, $pseudo, $img, $score) {
-       $this->id = $id;
+  public function __construct($mail, $pseudo, $img, $score) {
+       $this->id = 0;
        $this->mail = $mail;
        $this->pseudo = $pseudo;
        $this->img = $img;
@@ -22,7 +22,9 @@ class User {
   }
 
   private static function userFromRow($row) {
-    return new User($row['id'], $row['mail'], $row['pseudo'], $row['img'], $row['score']);
+    $user = new User($row['mail'], $row['pseudo'], $row['img'], $row['score']);
+    $user->id = $row['id'];
+    return $user;
   }
 
   public static function getTopTen(){

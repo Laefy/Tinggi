@@ -73,6 +73,18 @@ class Post {
         return array(Post::postFromRow($rows[0]), Post::postFromRow($rows[1]));
     }
 
+    public static function getPostsByUser($user) {
+        $rows = \Database::select(['*'], 'post_view', array('author' => $user->getId()));
+        $posts = array();
+
+        foreach ($rows as $row) {
+            $post = new Post($row['id'], $row['title'], $row['description'], $row['time'], $user, 0, $row['score']);
+            array_push($posts, $post);
+        }
+
+        return $posts;
+    }
+
     public static function getTopTen(){
         $rows = \Database::select(['*'], 'best_posts', []);
         $posts = array();
@@ -101,7 +113,7 @@ class Post {
     }
 
     public function save(){
-        \Database::insert(array('type' => $this->type, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()));
+        \Database::insert(array('id' => $this->id, 'title' => '\'' .$this->title. '\'', 'desc' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()));
     }
 
     public function loadComments() {
@@ -122,6 +134,10 @@ class Post {
 
     public function setAuthor($author){
         $this->author = $author;
+    }
+
+    public function delete() {
+        
     }
 }
 ?>

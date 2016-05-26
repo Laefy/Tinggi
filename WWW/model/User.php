@@ -41,6 +41,10 @@ class User {
     return User::userFromRow($row);
   }
 
+  public function loadPosts() {
+    $this->posts = Post::getPostsByUser($this);
+  }
+
   public function getLogin(){
     return $this->pseudo;
   }
@@ -60,7 +64,7 @@ class User {
   }
 
   public function setPassword($password){
-    Database::update(array('password' => '\''.$password.'\''), 'user', array('id'=>$this->id));
+    \Database::update(array('password' => '\''.$password.'\''), 'user', array('id'=>$this->id));
   }
 
   public function setPosts($posts){
@@ -69,6 +73,14 @@ class User {
 
   public function setImage($img){
     $this->img = $img;
+  }
+
+  public function save() {
+    \Database::insert(array('mail' => '\''.$this->mail.'\'', 'pseudo' => '\''.$this->pseudo.'\'', 'img' => $this->img), 'user');
+  }
+
+  public function update() {
+    \Database::update(array('mail' => '\''.$this->mail.'\'', 'pseudo' => '\''.$this->pseudo.'\'', 'img' => $this->img), 'user', array('id' => $this->id));
   }
 
 }

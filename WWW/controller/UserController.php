@@ -32,6 +32,19 @@ class UserController extends Controller{
     $render = new \view\Renderer('Tinggy - Modifier votre profile', 'profile.view.php', $VIEW_user, NULL);
     $render->render();
   }
+
+  public function top() {
+    $VIEW_user;
+    if(\Session::isLogin()){
+      $VIEW_user = \Session::getUser();
+    } else {
+      $response = new \view\Response('redirect', 'signin');
+      $response->send();
+    }
+    $render = new \view\Renderer('Tinggy - Les Tops des Tops', 'tops.view.php', $VIEW_user, NULL);
+    $render->render();
+  }
+
   public function validsignup(){
     $error = false;
 
@@ -79,6 +92,7 @@ class UserController extends Controller{
     }
     $response->send();
   }
+
   public function validsignin(){
     $error = false;
 

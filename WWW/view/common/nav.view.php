@@ -7,32 +7,32 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#page-top">Tinggy</a>
+            <a class="navbar-brand" href="<?= \Router::$ROOT ?>">Tinggy</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="page-scroll">
-                    <a href="">Match</a>
+                    <a href="<?= \Router::$ROOT ?>">Match</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="top">Top</a>
+                    <a href="<?= \Router::$ROOT."top" ?>">Top</a>
                 </li>
                 <?php
                   if(is_null($VIEW_user)){
                     echo '<li class="page-scroll">
-                        <a href="signup">Inscription</a>
+                        <a href="'.\Router::$ROOT.'signup">Inscription</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="signin">Connexion</a>
+                        <a href="'.\Router::$ROOT.'signin">Connexion</a>
                     </li>';
                   }
                   else{
                     echo '<li class="page-scroll">
-                        <a href="user/',$pseudo,'">Compte</a>
+                        <a href="'.\Router::$ROOT.'user/',$pseudo,'">Compte</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="signout">Deconnexion</a>
+                        <a href="'.\Router::$ROOT.'signout">Deconnexion</a>
                     </li>';
                   }
                 ?>

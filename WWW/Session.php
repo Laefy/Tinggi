@@ -43,35 +43,35 @@ class Session{
 			$_SERVER['auth'] = self::getUserInformation();
 			$_SERVER['user_id'] = 0;
 	}
-	
+
 	public static function getUser(){
 		return self::$user;
 	}
-	
+
 	public static function isLogin(){
-		return is_null(self::$user);	
+		return is_null(self::$user);
 	}
 	/*-------PAS FINIS--------------------------------*/
 	/*public static function login($pseudo, $key){
 		if())
 			return true;
-		return false;		
+		return false;
 	}*/
-	
+
 	public static function getMatch(){
-		
-		if($id1 != null && $id2 != null){		
-			return $match = array($id1,$id2);		
+
+		if(self::$id1 != null && self::$id2 != null){
+			return $match = array(self::$id1,self::$id2);
 		}
 		return null;
-		
+
 	}
-	
+
 	public static function saveMatch($lambda,$lambda2){
 		self::$id1 = $lambda;
 		self::$id2 = $lambda2;
 	}
-	
+
 	public static function resetMatch(){
 		self::$id1 = null;
 		self::$id2 = null;
@@ -79,7 +79,7 @@ class Session{
 	public static function reset(){
 		session_destroy();
 		session_start();
-		self::connection();	
+		self::connection();
 	}
 
 	public static function encrypt($string){

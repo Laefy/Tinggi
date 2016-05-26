@@ -21,7 +21,7 @@ class Renderer{
     include 'view/common/footer.view.php';
   }
 
-  private static function render_nav(){
+  private static function render_nav($VIEW_user){
     include 'view/common/nav.view.php';
   }
 
@@ -31,7 +31,7 @@ class Renderer{
 
   public function render(){
     self::render_header($this->title);
-    self::render_nav();
+    self::render_nav($this->currentUser);
     if(isset($this->view))
       self::render_one($this->view, $this->data);
     self::render_footer();

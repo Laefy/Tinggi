@@ -3,7 +3,6 @@
 namespace model;
 class Post {
     private $id;
-    private $type;
     private $title;
     private $desc;
     private $time;
@@ -12,9 +11,8 @@ class Post {
     private $score;
     private $userScore;
 
-    public function __construct($id, $type, $title, $desc, $time, $author, $comment, $score) {
+    public function __construct($id, $title, $desc, $time, $author, $comment, $score) {
          $this->id = $id;
-         $this->type = $type;
          $this->title = $title;
          $this->desc = $desc;
          $this->time = $time;
@@ -34,10 +32,6 @@ class Post {
 
     public function getDesc(){
         return $this->desc;
-    }
-
-    public function getType(){
-        return $this->type;
     }
 
     public function getTime(){
@@ -126,10 +120,6 @@ class Post {
 
     public function setDesc($desc){
         $this->desc = $desc;
-    }
-
-    public function setType($type){
-        $this->type = $type;
     }
 
     public function setAuthor($author){

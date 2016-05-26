@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2016 at 12:41 PM
+-- Generation Time: May 26, 2016 at 01:13 PM
 -- Server version: 5.7.9
 -- PHP Version: 5.6.16
 
@@ -157,7 +157,7 @@ DELIMITER ;
 DROP VIEW IF EXISTS `best_posts`;
 CREATE TABLE IF NOT EXISTS `best_posts` (
 `id` int(11)
-,`title` varchar(50)
+,`title` varchar(100)
 ,`description` text
 ,`time` timestamp
 ,`author` int(11)
@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE IF NOT EXISTS `post` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(50) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `description` text NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` int(11) NOT NULL,
@@ -232,7 +232,7 @@ INSERT INTO `post` (`id`, `title`, `description`, `time`, `author`) VALUES
 DROP VIEW IF EXISTS `post_view`;
 CREATE TABLE IF NOT EXISTS `post_view` (
 `id` int(11)
-,`title` varchar(50)
+,`title` varchar(100)
 ,`description` text
 ,`time` timestamp
 ,`author` int(11)

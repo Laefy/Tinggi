@@ -40,6 +40,9 @@ class Accesor {
           case 'string' :
             array_push($error,self::checkString($var,$param));
           break;
+          case 'comp' :
+            array_push($error,self::compString($var,$param));
+          break;
         }
       }
       return $error;
@@ -82,6 +85,12 @@ class Accesor {
             }
           break;
         }
+      }
+    }
+
+    private static function compString($var,$param){
+      if(strcmp($var,$param[0]) != 0){
+            return '"'.$var.'" est une chaine incorrecte.';
       }
     }
 }

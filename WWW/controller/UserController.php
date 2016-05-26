@@ -31,16 +31,20 @@ class UserController extends Controller{
     $render->render();
   }
   public function validsignup(){
-    $error = false
-    $errors = \Accesor::checkPost(["login"=>["string"=>["min" => 5, "max" => 10]], ""]);
-    $error = !isempty($errors);
-
+    $error = false;
 
     // Faire les validations
-
-    // Enregistrer l'utilisateur dans la session
+    $errors = \Accesor::checkPost([
+      "login"=>["string"=>["min" => 5, "max" => 30]],
+      "email"=>["string"=>["min"=>10, "max" => 50]],
+      "password"=>["string"=>["min"=>8, "max" => 50]],
+      "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
+    ]);
+    $error = !isempty($errors);
 
     // Enregistrer l'utilisateur dans la BDD
+
+    // Enregistrer l'utilisateur dans la session
 
     if($error){
       $response = new Response('redirect', '');
@@ -52,7 +56,13 @@ class UserController extends Controller{
   public function validmodif($id){
     $error = false;
 
-    extract($_POST);
+    $errors = \Accesor::checkPost([
+      "login"=>["string"=>["min" => 5, "max" => 30]],
+      "email"=>["string"=>["min"=>10, "max" => 50]],
+      "password"=>["string"=>["min"=>8, "max" => 50]],
+      "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
+    ]);
+    $error = !isempty($errors);
 
     // Faire les validations
 

@@ -60,7 +60,7 @@ class User {
   }
 
   public function setPassword($password){
-    Database::update(array('password' => '\''.$password.'\''), 'user', array('id'=>$this->id));
+    \Database::update(array('password' => '\''.$password.'\''), 'user', array('id'=>$this->id));
   }
 
   public function setPosts($posts){

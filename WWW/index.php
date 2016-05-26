@@ -32,6 +32,9 @@
 
 	Router::addRoute('post/comment/(\d+)', 'controller\CommentController', 'send');
 
+	Router::addRoute('post/winner/(\d+)', 'controller\PostController', 'winner');
+	Router::addRoute('post/match/', 'controller\PostController', 'match');
+
 	// Send the request to the good controller
 	Router::execute($_GET['uri']);
 ?>

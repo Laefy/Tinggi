@@ -84,11 +84,12 @@ class PostController extends Controller{
       $matches = \model\Post::getMatchPosts();
       $m1 = $matches[0];
       $m2 = $matches[1];
-      $response = new \view\Response('json', NULL, array("id1" => $m1->getId(), "title1" => $m1->getTitle(), "description1" => PostController::makeBaliseFromDesc($m1->getDesc()), "id2" => $m2->getId(), "title2" => $m2->getTitle(), "description2" => $m2-> PostController::makeBaliseFromDesc($m1->getDesc())));
-      $response->send();
+      $response = new \view\Response('json', NULL, array("id1" => $m1->getId(), "title1" => $m1->getTitle(), "description1" => PostController::baliseFromDescription($m1->getDesc()), "id2" => $m2->getId(), "title2" => $m2->getTitle(), "description2" => PostController::baliseFromDescription($m1->getDesc())));
+      $response->send('');
   }
 
   public function winner($postID) {
+    echo "Winner is " . $postID;
   }
 
   public function like($postID){
@@ -112,21 +113,22 @@ class PostController extends Controller{
   }
 
   public static function makeBaliseFromDesc($desc){
-    if(preg_match(self::getPostDescPattern(),$desc, $matches)){
+    echo PostController::baliseFromDescription($desc);
+  }
+
+  private static function baliseFromDescription($description) {
+    if(preg_match(self::getPostDescPattern(),$description, $matches)){
       switch ($matches['mediaType']) {
         case 'img':
-          echo '<img class="img_match" src="data/img/',$matches['mediaContent'],'">';
-          break;
+          return '<img class="img_match" src="data/img/' .$matches['mediaContent']. '">';
         case 'vid':
-            echo '<iframe src="',$matches['mediaContent'],'" frameborder="0" allowfullscreen></iframe>';
-            break;
+            return '<iframe src="' .['mediaContent']. '" frameborder="0" allowfullscreen></iframe>';
         default:
-          echo $matches['postDesc'];
-          break;
+            return $matches['postDesc'];
       }
     }
     else{
-      echo 'Contenu indisponible';
+      return 'Contenu indisponible';
     }
   }
 

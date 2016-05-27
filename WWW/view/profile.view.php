@@ -26,7 +26,7 @@
                 <input type="password" name="password" class="form-control" id="password" placeholder="mot de passe" value="<?= \Accessor::post('password','string') ?>">
               </div>
               <div class="form-group">
-                <input type="vpassword" name="verifpassword" class="form-control" id="verifpassword" placeholder="confirmation du mot de passe" value="">
+                <input type="password" name="verifpassword" class="form-control" id="verifpassword" placeholder="confirmation du mot de passe" value="">
               </div>
               <div class="form-group">
                 <label for="img">Choissisez une image de profil (facultatif)</label>

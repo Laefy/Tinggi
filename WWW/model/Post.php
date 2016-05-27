@@ -37,7 +37,7 @@ class Post {
     public function getTime(){
         return $this->time;
     }
-
+    
     public function getAuthor(){
         return $this->author;
     }

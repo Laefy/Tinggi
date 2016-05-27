@@ -48,5 +48,12 @@ class Renderer{
     echo json_encode($data);
   }
 
+  public static function render_errors() {
+    if(isset($data['error']) && isset($data['errors']))
+    {
+      include \Router::$WEBROOT.'view/common/errors.alert.view.php';
+    }
+  }
+
 }
 ?>

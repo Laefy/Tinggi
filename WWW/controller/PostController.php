@@ -6,78 +6,38 @@ namespace controller;
 class PostController extends Controller{
 
   public function index() {
-    $VIEW_user = "";
-
-    if(\Session::isLogin()){
-      $VIEW_user = \Session::getUser();
-    } else {
-      $VIEW_user = NULL;
+    $posts = [];
+    $match1 = \Session::getVar('match1');
+    $match2 = \Session::getVar('match2');
+    if(($match1) && ($match2)){
+      array_push($posts, \model\Post::getPostById($match1), \model\Post::getPostById($match2));
     }
-    $VIEW_posts;
-    $session_Match = \Session::getMatch();
-    if($session_Match == NULL){
-      $VIEW_posts = \model\Post::getMatchPosts();
-    } else {
-      array_push($VIEW_posts, \model\Post::getPostById($session_Match[0]), \model\Post::getPostById($session_Match[1]));
+    else{
+      $posts = \model\Post::getMatchPosts();
     }
-
-    $data = array(
-        "post1" => $VIEW_posts[0],
-        "post2" => $VIEW_posts[1]
-                  );
-    $render = new \view\Renderer('Tinggy - Match', 'match.view.php',$VIEW_user, $data);
-    $render->render();
+    $renderer = new \view\Renderer('Tinggy - Juste du rire', 'match.view.php', ["post1" => $posts[0],"post2" => $posts[1]]);
+    $renderer->render();
   }
 
   public function top() {
-    $VIEW_user;
-    if(\Session::isLogin()){
-      $VIEW_user = \Session::getUser();
-    } else {
-      $VIEW_user = NULL;
-    }
-
-    $VIEW_posts = \model\Post::getTopTen();
-    $data = array(
-        "posts" => $VIEW_posts
-      );
-    $render = new \view\Renderer('Tinggy - Top', 'top.view.php', $VIEW_user, $data);
-    $render->render();
+    $renderer = new \view\Renderer('Tinggy - Top des publications', 'top.view.php', ["posts" => \model\Post::getTopTen()]);
+    $renderer->render();
   }
 
   public function read($id) {
-    $VIEW_user;
-    if(\Session::isLogin()){
-      $VIEW_user = \Session::getUser();
-    } else {
-      $VIEW_user = NULL;
-    }
-
-    $VIEW_post = \model\Post::getPostById($id);
-
-    $data = array(
-      'post' => $VIEW_post
-    );
-
-    $render = new \view\Renderer('Tinggy - '.$VIEW_post->getTitle(), 'read.view.php', $VIEW_user, $data);
-    $render->render();
+    $post = \model\Post::getPostById($id);
+    $comments = \model\Comment::getCommentsByPost($post);
+    $renderer = new \view\Renderer('Tinggy - '.$post->getTitle(), 'read.view.php', ['post' => $post, 'comments' => $comments]);
+    $renderer->render();
   }
 
   public function create() {
-    $VIEW_user;
-    if(\Session::isLogin()){
-      $VIEW_user = \Session::getUser();
-    } else {
-      $VIEW_user = NULL;
-    }
-
-    if($VIEW_user){
-      $render = new \view\Renderer('Tinggy - Nouveau poste', 'create.view.php', $VIEW_user, NULL);
-      $render->render();
-    } else {
+    if(!\Session::isLogin()) {
       $response = new \view\Response('redirect', 'signup');
-      $response->send(NULL);
+      $response->send();
     }
+    $render = new \view\Renderer('Tinggy - Nouvelle publication', 'create.view.php');
+    $render->render();
   }
 
   public function match(){
@@ -85,7 +45,7 @@ class PostController extends Controller{
       $m1 = $matches[0];
       $m2 = $matches[1];
       $response = new \view\Response('json', NULL, array("id1" => $m1->getId(), "title1" => $m1->getTitle(), "description1" => PostController::baliseFromDescription($m1->getDesc()), "id2" => $m2->getId(), "title2" => $m2->getTitle(), "description2" => PostController::baliseFromDescription($m1->getDesc())));
-      $response->send('');
+      $response->send();
   }
 
   public function winner($postID) {
@@ -95,17 +55,18 @@ class PostController extends Controller{
   public function like($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleLike();
-
     $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
-    $response->send(NULL);
+    $response->send();
   }
 
   public function dislike($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleDislike();
+    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response->send();
   }
 
-  static function parseDescription($desc,$url){
+  public static function parseDescription($desc,$url){
     if(preg_match('/\.(jpg|png|gif|ppm)$/i',$url)){
       return 'img:'.$url.'\n'.$desc;
     }
@@ -118,29 +79,27 @@ class PostController extends Controller{
   }
 
   public function send(){
-    $error = false;
+    if(!\Session::isLogin()){
+      $response = new \view\Response('redirect', 'signin');
+      $response->send();
+    }
 
     // Faire les validations
-    $errors = \Accesor::checkPost([
+    $errors = \Accessor::checkPost([
       "title"=>["string"=>["min" => 1, "max" => 100]],
-      "url"=>["string"=>["min"=>1, "max" => 100]],
       "description"=>["string"=>["min"=>1]],
     ]);
+
     $error = !empty($errors);
 
     if(!$error){
-      $post = new \model\Post(\Accesor::post('title','string'),
-                              self::parseDescription(\Accesor::post('description','string'),
-                              \Accesor::post('url','string')),
-                              \model\User::getById(1));
-      print_r($post);
+      $post = new \model\Post(\Accessor::post('title','string'),self::parseDescription(\Accessor::post('description','string'),\Accessor::post('url','string')),\Session::getUser());
       $post->save();
       $response = new \view\Response('redirect', 'match');
-    } else {
-      $response = new \view\Response('redirect', 'signup');
+      $response->send();
     }
-    //$response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
-    $response->send(NULL);
+    $renderer = new \view\Renderer('Tinggy - Nouvelle publication', 'create.view.php',['error' => $error, 'errors' => $errors]);
+    $renderer->render();
   }
 
 
@@ -156,7 +115,7 @@ class PostController extends Controller{
     if(preg_match(self::getPostDescPattern(),$description, $matches)){
       switch ($matches['mediaType']) {
         case 'img':
-          return '<img class="img_match" src="' .\Router::$ROOT. 'data/img/' .$matches['mediaContent']. '">';
+          return '<img class="img_match" src="'.$matches['mediaContent'].'">';
         case 'vid':
             return '<iframe src="' .str_replace('watch?v=','embed/',$matches['mediaContent']). '" frameborder="0" allowfullscreen></iframe>';
         default:

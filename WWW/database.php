@@ -4,7 +4,7 @@ class Database {
 	private static $host = '127.0.0.1';
 	private static $dbname = 'Tinggi';
 	private static $user = 'root';
-	private static $password = '';
+	private static $password = 'root';
 	private static $pdo = null;
 
 	public static function getInstance(){

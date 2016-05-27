@@ -76,7 +76,7 @@ class Post {
         $posts = array();
 
         foreach ($rows as $row) {
-            $post = postFromRow($row, $user);
+            $post = self::postFromRow($row, $user);
             array_push($posts, $post);
         }
 
@@ -111,7 +111,7 @@ class Post {
     }
 
     public function save(){
-        \Database::insert(array('title' => '\'' .$this->title. '\'', 'description' => '\'' .$this->desc. '\'', 'author' => $this->author->getId()));
+        \Database::insert(array('title' => $this->title, 'description' => $this->desc, 'author' => $this->author->getId()),'post');
     }
 
     public function loadComments() {

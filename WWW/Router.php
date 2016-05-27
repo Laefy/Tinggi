@@ -24,8 +24,8 @@ class Router {
 				return call_user_func_array($callback, array_values($params));
 			}
 		}
-    $response = new Response('error');
-    $response->send(array( 'title' => 'Error 404', 'msg' =>"Url incorrect! Boufon!"));
+    $response = new Response('error','404 :\'(','Cette page n\'existe pas !');
+    $response->send();
   }
 }
 ?>

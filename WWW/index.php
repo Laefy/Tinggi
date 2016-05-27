@@ -20,15 +20,17 @@
 	Router::addRoute('signout', 'controller\UserController', 'signOut');
 	Router::addRoute('signup/error', 'controller\UserController', 'signup');
 
+	Router::addRoute('user/board', 'controller\UserController', 'board');
 	Router::addRoute('user/(\w+)', 'controller\UserController', 'edit');
-	Router::addRoute('user/top', 'controller\UserController', 'top');
+	Router::addRoute('user/(\w+)/update', 'controller\UserController', 'validmodif');
 
 	Router::addRoute('', 'controller\PostController', 'index');
   Router::addRoute('match', 'controller\PostController', 'index');
 	Router::addRoute('top', 'controller\PostController', 'top');
-	Router::addRoute('post/(\d+)', 'controller\PostController', 'read');
 	Router::addRoute('post/new', 'controller\PostController', 'create');
 	Router::addRoute('post/send', 'controller\PostController', 'send');
+	Router::addRoute('post/(\d+)', 'controller\PostController', 'read');
+
 	Router::addRoute('post/toggleLike/(\d+)', 'controller\PostController', 'like');
 	Router::addRoute('post/toggleDislike/(\d+)', 'controller\PostController', 'dislike');
 

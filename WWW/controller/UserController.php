@@ -6,7 +6,11 @@ namespace controller;
 class UserController extends Controller{
 
   public function signIn() {
-    $render = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, NULL);
+    if(\Session::isLogin()){
+      $response = new \view\Response('redirect', '');
+      $response->send();
+    }
+    $render = new \view\Renderer('Tinggy - Connexion', 'login.view.php');
     $render->render();
   }
 
@@ -17,155 +21,145 @@ class UserController extends Controller{
   }
 
   public function signUp() {
-    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php', NULL, NULL);
+    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php',['title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new']);
     $render->render();
   }
 
   public function edit() {
-    $VIEW_user;
-    if(\Session::isLogin()){
-      $VIEW_user = \Session::getUser();
-    } else {
-      $VIEW_user == NULL;
-    }
-
-    $render = new \view\Renderer('Tinggy - Modifier votre profile', 'profile.view.php', $VIEW_user, NULL);
-    $render->render();
-  }
-
-  public function top() {
     if(!\Session::isLogin()){
       $response = new \view\Response('redirect', 'signin');
       $response->send();
     }
-    $VIEW_user = \Session::getUser();
-    $VIEW_topusers = \model\User::getTopTen();
-    $VIEW_posts = \model\Post::getPostsByUser($VIEW_user);
-    $render = new \view\Renderer('Tinggy - Les Tops des Tops', 'tops.view.php', $VIEW_user,['users' => $VIEW_topusers, 'posts' => $VIEW_posts]);
+    if((!isset($_POST['login']))&&(!isset($_POST['email'])))
+    {
+      $_POST['login'] = \Session::getUser()->getLogin();
+      $_POST['email'] = \Session::getUser()->getMail();
+    }
+    $render = new \view\Renderer('Tinggy - Modifier votre profile', 'profile.view.php',['title' => 'Votre profile', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
     $render->render();
   }
 
-  public function validsignup(){
-    $error = false;
+  public function board() {
+    if(!\Session::isLogin()){
+      $response = new \view\Response('redirect', 'signin');
+      $response->send();
+    }
+    $renderer = new \view\Renderer('Tinggy - Les Tops des Tops', 'board.view.php',['users' => \model\User::getTopTen(), 'posts' => \model\Post::getPostsByUser(\Session::getUser())]);
+    $renderer->render();
+  }
 
+  public function validsignup(){
     // Faire les validations //
-    $errors = \Accesor::checkPost([
+    $errors = \Accessor::checkPost([
       "login"=>["string"=>["min" => 5, "max" => 30]],
       "email"=>["string"=>["min"=>10, "max" => 50]],
       "password"=>["string"=>["min"=>8, "max" => 50]],
-      "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
+      "verifpassword"=>["comp"=>[\Accessor::post("password", "string")]]
       //Vérification pour l'image de profil à faire
     ]);
+
+    if(!\Session::isNotARobot()){
+        array_push($errors,"Vous êtes un robot ! :/");
+    }
+
     $error = !empty($errors);
 
-    // Enregistrer l'utilisateur dans la BDD //
-    if(!$error && !\model\User::getByLogin(\Accesor::post("login", "string")) && !\model\User::getByLogin(\Accesor::post("email", "string"))){
-      $img = \Accesor::post("img", "file");
-      $new_user = new \model\User(\Accesor::post("email", "string"), \Accesor::post("login", "string"), $img, 0);
+    if(!$error)
+    {
+      // Enregistrer l'utilisateur dans la BDD //
+      $img = \Accessor::post("img", "file");
+      if(!$img)
+      {
+        $img = 'default.png';
+      }
+      $new_user = new \model\User(\Accessor::post("email", "string"), \Accessor::post("login", "string"), $img, 0);
       $new_user->save();
-      $new_user->setPassword(\Session::encrypt(\Accesor::post("password", "string")));
-
+      $new_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
+      var_dump(\model\User::getByLogin($new_user->getLogin()));
+      exit();
       // Enregistrer l'utilisateur dans la session //
-      \Session::signIn($new_user);
-    } else {
-      $error = true;
-      array_push($errors, "Login ou adresse mail déjà utilisé.");
-    }
-
-    if(!$error){
+      \Session::signIn(\model\User::getByLogin($new_user->getLogin()));
       $response = new \view\Response('redirect', '');
       $response->send();
-    } else {
-      $datas = array(
-        "error" => $error,
-        "errors" => $errors
-      );
-      $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", NULL, $datas);
     }
+    $datas = array("error" => $error, "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
+    $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", $datas);
+    $renderer->render();
   }
-  public function validmodif($id){
-    $error = false;
-    $errors = \Accesor::checkPost([
+
+  public function validmodif($login){
+    //utilisateur non logé ou different
+    if((!\Session::isLogin())||(strcmp(\Session::getUser()->getLogin(),$login) != 0)){
+      $response = new \view\Response('redirect', 'signin');
+      $response->send();
+    }
+
+    if(!\Session::isNotARobot()){
+        array_push($errors,"Vous êtes un robot ! :/");
+    }
+
+    // Faire les validations //
+    $errors = \Accessor::checkPost([
       "login"=>["string"=>["min" => 5, "max" => 30]],
       "email"=>["string"=>["min"=>10, "max" => 50]],
       "password"=>["string"=>["min"=>8, "max" => 50]],
-      "verifpassword"=>["comp"=>[\Accesor::post("password", "string")]]
+      "verifpassword"=>["comp"=>[\Accessor::post("password", "string")]]
+      //Vérification pour l'image de profil à faire
     ]);
     $error = !empty($errors);
 
     // Faire les validations
     if(!$error){
-      if(\Session::isLogin()){
-        $update_user = \Session::getUser();
-        $update_user->setLogin(\Accesor::post("login", "string"));
-        $update_user->setMail(\Accesor::post("email", "string"));
-        $update_user->setImage(\Accesor::post("img", "file"));
-        $update_user->update();
+      $update_user = \Session::getUser();
+      $update_user->setLogin(\Accessor::post("login", "string"));
+      $update_user->setMail(\Accessor::post("email", "string"));
+      $update_user->setImage(\Accessor::post("img", "file"));
+      $error = $update_user->update();
+      if(!$error)
+      {
         \Session::signIn($update_user);
-        $update_user->setPassword(\Session::encrypt(\Accesor::post("password", "string")));
-      } else {
-        $error = true;
+        $update_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
+        $response = new \view\Response('redirect', '');
+        $response->send();
       }
     }
-
-    if(!$error){
-      $response = new \view\Response('redirect', '');
-      $response->send();
-    } else {
-      $VIEW_user = \Session::getUser();
-      $datas = array(
-        "error" => $error,
-        "erreors" => $errors
-      );
-      $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', $VIEW_user, $datas);
-    }
+    $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', ["error" => $error, "errors" => $errors,'title' => 'Votre profile', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
+    $renderer->render();
   }
 
   public function validsignin(){
-    $error = false;
-
-    $errors = \Accesor::checkPost([
+    $errors = \Accessor::checkPost([
       "login"=>["string"=>["min" => 5, "max" => 30]],
       "password"=>["string"=>["min"=>8, "max" => 50]]
     ]);
 
-    $error = !empty($errors);
-    if(!$error){
-    $id_user = \Database::call("SIGN_IN",[\Accesor::post("login", "string"), \Session::encrypt(\Accesor::post("password", "string"))]);
+    if(!\Session::isNotARobot()){
+        array_push($errors,"Vous êtes un robot ! :/");
+    }
 
-      if(empty($id_user)){
-        array_push($errors,["Identifiants incorrects."]);
+    $error = !empty($errors);
+
+    if(!$error)
+    {
+      $id_user = \Database::call_function("SIGN_IN",[\Accessor::post("login", "string"), \Session::encrypt(\Accessor::post("password", "string"))]);
+      if($id_user == 0){
+        array_push($errors,"Identifiants incorrects.");
         $error = true;
       }
+      else
+      {
+        $user = \model\User::getById($id_user);
+        \Session::signIn($user);
+        $response = new \view\Response('redirect', '');
+        $response->send();
+      }
     }
-
-    if(!$error){
-      $user = \model\User::getById($id_user);
-      \Session::signIn($user);
-
-      $response = new \view\Response('redirect', '');
-      $response->send(NULL);
-    } else {
-
-      $datas = array(
-        "error" => $error,
-        "errors" => $errors
-      );
-      $render = new \view\Renderer('Tinggy - Connexion', 'login.view.php', NULL, $datas);
-      $render->render();
-    }
+    $renderer = new \view\Renderer('Tinggy - Connexion', 'login.view.php', ["error" => $error,"errors" => $errors]);
+    $renderer->render();
   }
 
   public function tops(){
-    $VIEW_user;
-    if(\Session::isLogin()){
-      $VIEW_user = \Session::getUser();
-    } else {
-      $VIEW_user = NULL;
-    }
-
-    $data = array('user' => $VIEW_user);
-    $render = new \view\Renderer('Tinggy - Top du top', 'tops.view.php', $data);
+    $render = new \view\Renderer('Tinggy - Top du top', 'tops.view.php');
     $render->render();
   }
 }

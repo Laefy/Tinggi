@@ -1,19 +1,18 @@
 <?php
 namespace view;
+
 class Renderer{
 
   private $title;
   private $view;
-  private $currentUser;
   private $data;
 
-  function __construct($title, $view, $currentUser, $data){
+  function __construct($title, $view, $data = []){
     $this->title = $title;
     $this->view = $view;
-    $this->currentUser =$currentUser;
     $this->data = $data;
   }
-  private static function render_header($VIEW_title){
+  private static function render_header($title){
     include \Router::$WEBROOT.'view/common/header.view.php';
   }
 
@@ -21,7 +20,7 @@ class Renderer{
     include \Router::$WEBROOT.'view/common/footer.view.php';
   }
 
-  private static function render_nav($VIEW_user){
+  private static function render_nav(){
     include \Router::$WEBROOT.'view/common/nav.view.php';
   }
 
@@ -31,7 +30,7 @@ class Renderer{
 
   public function render(){
     self::render_header($this->title);
-    self::render_nav($this->currentUser);
+    self::render_nav();
     if(isset($this->view))
       self::render_one($this->view, $this->data);
     self::render_footer();
@@ -39,7 +38,7 @@ class Renderer{
 
   public static function renderError($VIEW_errorTitle, $VIEW_errorMsg) {
     self::render_header($VIEW_errorTitle);
-    self::render_nav($this->currentUser);
+    self::render_nav();
     include \Router::$WEBROOT.'view/common/error.view.php';
     self::render_footer();
   }
@@ -48,5 +47,11 @@ class Renderer{
     echo json_encode($data);
   }
 
+  public static function render_errors($data) {
+    if(isset($data['error']) && isset($data['errors']))
+    {
+      include \Router::$WEBROOT.'view/common/errors.alert.view.php';
+    }
+  }
 }
 ?>

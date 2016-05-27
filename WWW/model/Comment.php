@@ -47,6 +47,10 @@ class Comment {
   public function getTime(){
     return $this->time;
   }
+
+  public function getFormatTime() {
+    return 'Le '.date('d/m/Y', $this->time).' &agrave; '.date('H:i:s', $this->time);
+  }
   public function getAuthor(){
     return $this->author;
   }
@@ -56,7 +60,7 @@ class Comment {
   }
 
   public function save(){
-    Database::insert(array('author' => $this->author->getId(), 'target' => $this->target->getId(), 'texte' => '\'' .$this->text. '\''),'comment');
+    Database::insert(array('author' => $this->author->getId(), 'target' => $this->target->getId(), 'texte' => $this->text),'comment');
   }
 
   public function setDesc($desc){

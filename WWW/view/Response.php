@@ -13,13 +13,14 @@ class Response{
     $this->data = $data;
   }
 
-  public function send($param) {
+  public function send() {
     switch ($this->type) {
-      case 'error': $this->sendError($param['title'],$param['msg']); break;
+      case 'error': $this->sendError($this->path,$this->data); break;
       case 'json': $this->sendJson($this->data); break;
       case 'redirect': $this->sendRedirect($this->path); break;
       default: break;
     }
+    exit(0);
   }
 
   private function sendError($errorTitle, $errorMsg){
@@ -35,7 +36,7 @@ class Response{
   }
 
   private function sendRedirect($path){
-    header('Location : '.\Router::$ROOT.$path);
+    header('Location: '.\Router::$ROOT.$path);
     exit(0);
   }
 }

@@ -16,9 +16,11 @@ function toggleLike(element) {
 		var data = JSON.parse(response);
 		var likes = document.getElementById('js-likes');
 		var dislikes = document.getElementById('js-dislikes');
+		var score = document.getElementById('js-score');
 
 		likes.innerHTML = data.likes;
 		dislikes.innerHTML = data.dislikes;
+		score.innerHTML = data.score;
 	}
 
 	ajaxRequest('like/' + id, action);
@@ -31,9 +33,11 @@ function toggleDislike(element) {
 		var data = JSON.parse(response);
 		var likes = document.getElementById('js-likes');
 		var dislikes = document.getElementById('js-dislikes');
+		var score = document.getElementById('js-score');
 
 		likes.innerHTML = data.likes;
 		dislikes.innerHTML = data.dislikes;
+		score.innerHTML = data.score;
 	} 
 
 	ajaxRequest('dislike/' + id, action);

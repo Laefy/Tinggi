@@ -108,28 +108,30 @@ class Post {
         return $posts;
     }
 
+    private function getUpdatedScore() {
+        $updated = \Database::select(['score', 'likes', 'dislikes'], 'post_view', array('id' => $this->id))[0];
+
+        $this->score = $updated['score'];
+        $this->likes = $updated['likes'];
+        $this->dislikes = $updated['dislikes'];
+    }
+
     public function toggleLike() {
         $user = \Session::getUser();
         if ($user != NULL) {
             $this->userScore = \Database::call('TOGGLE_LIKE', [$user->getId(), $this->id])[0]['love'];
-            $updated = \Database::select(['score', 'likes', 'dislikes'], 'post_view', array('id' => $this->id))[0];
-
-            $this->score = $updated['score'];
-            $this->likes = $updated['likes'];
-            $this->dislikes = $updated['dislikes'];
         }
+
+        self::getUpdatedScore();
     }
 
     public function toggleDislike() {
         $user = \Session::getUser();
         if ($user != NULL) {
             $this->userScore = \Database::call('TOGGLE_DISLIKE', [$user->getId(), $this->id])[0]['love'];
-            $updated = \Database::select(['score', 'likes', 'dislikes'], 'post_view', array('id' => $this->id))[0];
-
-            $this->score = $updated['score'];
-            $this->likes = $updated['likes'];
-            $this->dislikes = $updated['dislikes'];
         }
+
+        self::getUpdatedScore();
     }
 
     public function save(){

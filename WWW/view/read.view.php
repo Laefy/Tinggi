@@ -3,7 +3,7 @@
         <div class="row">
           <div id="all_like">
             <img src="../data/img/crown.png" alt="Match" class="crown"></img>
-            <div class="all_like">500</div>
+            <div class="all_like" id="js-score"><?=$data['post']->getScore()?></div>
           </div>
             <div class="col-lg-12">
                 <div class="intro-text">

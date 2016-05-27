@@ -28,7 +28,7 @@
 					<label for="description" class="post_int">Écris ton  message</label>
 					<textarea type="text" class="form-control" name="description"><?= \Accessor::post('description','string'); ?></textarea>
 				  </div>
-				  <button type="submit" class="btn btn-default">C'est moi !</button>
+				  <button type="submit" class="btn btn-default">Envoyer</button>
 				</form>
 		  </div>
 	  </div>

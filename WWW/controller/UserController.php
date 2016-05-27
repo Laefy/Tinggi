@@ -21,7 +21,7 @@ class UserController extends Controller{
   }
 
   public function signUp() {
-    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php',['title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new']);
+    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php',['title' => 'Hey !', 'description' => 'rejoins-nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new']);
     $render->render();
   }
 
@@ -35,7 +35,7 @@ class UserController extends Controller{
       $_POST['login'] = \Session::getUser()->getLogin();
       $_POST['email'] = \Session::getUser()->getMail();
     }
-    $render = new \view\Renderer('Tinggy - Modifier votre profile', 'profile.view.php',['title' => 'Votre profile', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
+    $render = new \view\Renderer('Tinggy - Modifier votre profile', 'profile.view.php',['title' => 'Votre profil', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
     $render->render();
   }
 
@@ -100,7 +100,7 @@ class UserController extends Controller{
       }
     }
 
-    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
+    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins-nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
     $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", $datas);
     $renderer->render();
   }
@@ -155,7 +155,7 @@ class UserController extends Controller{
         $response->send();
       }
     }
-    $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', ["error" => $error, "errors" => $errors,'title' => 'Votre profile', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
+    $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', ["error" => $error, "errors" => $errors,'title' => 'Votre profil', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
     $renderer->render();
   }
 

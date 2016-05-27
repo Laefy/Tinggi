@@ -21,7 +21,7 @@ class UserController extends Controller{
   }
 
   public function signUp() {
-    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php',['title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new']);
+    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php',['title' => 'Hey !', 'description' => 'rejoins-nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new']);
     $render->render();
   }
 
@@ -35,7 +35,7 @@ class UserController extends Controller{
       $_POST['login'] = \Session::getUser()->getLogin();
       $_POST['email'] = \Session::getUser()->getMail();
     }
-    $render = new \view\Renderer('Tinggy - Modifier votre profile', 'profile.view.php',['title' => 'Votre profile', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
+    $render = new \view\Renderer('Tinggy - Modifier votre profile', 'profile.view.php',['title' => 'Votre profil', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
     $render->render();
   }
 
@@ -55,17 +55,25 @@ class UserController extends Controller{
       "email"=>["string"=>["min"=>10, "max" => 50]],
       "password"=>["string"=>["min"=>8, "max" => 50]],
       "verifpassword"=>["comp"=>[\Accessor::post("password", "string")]]
-      //Vérification pour l'image de profil à faire
     ]);
 
     if(!\Session::isNotARobot()){
         array_push($errors,"Vous êtes un robot ! :/");
     }
 
+    $img = \Accessor::post("img", "file");
+    if($img=='' || $_FILES["img"]['error'] == 4) {
+      $img = 'default.png';
+    } else {
+      $fileerror = \Accessor::checkFile("img", ["maxsize" => 1000000, "resolution" => 500]);
+      if($fileerror)
+        array_push($errors,$fileerror);
+    }
+
     if(empty($errors)) {
-      $img = \Accessor::post("img", "file");
-      if(!$img) {
-        $img = 'default.png';
+      if($img!='default.png'){
+        $img = uniqid().'.'.pathinfo($_FILES["img"]['name'], PATHINFO_EXTENSION);
+        \Accessor::saveFile($_FILES['img']['tmp_name'], $img);
       }
 
       $mail = \Accessor::post("email", "string");
@@ -73,9 +81,8 @@ class UserController extends Controller{
 
       // Check that the user is not already in the database.
       if (\model\User::getByLogin($login) != NULL) {
-          echo 'prout';
           array_push($errors, "Le login est déjà utilisé.");
-      } 
+      }
 
       if (\model\User::getByMail($mail) != NULL) {
           array_push($errors, "L'adresse mail est déjà utilisée.");
@@ -85,8 +92,6 @@ class UserController extends Controller{
         $new_user = new \model\User($mail, $login, $img);
         $new_user->save();
         $new_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
-    //    var_dump(\model\User::getByLogin($new_user->getLogin()));
-    //    exit();
 
         // Enregistrer l'utilisateur dans la session //
         \Session::signIn(\model\User::getByLogin($new_user->getLogin()));
@@ -95,7 +100,7 @@ class UserController extends Controller{
       }
     }
 
-    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
+    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins-nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
     $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", $datas);
     $renderer->render();
   }
@@ -119,14 +124,28 @@ class UserController extends Controller{
       "verifpassword"=>["comp"=>[\Accessor::post("password", "string")]]
       //Vérification pour l'image de profil à faire
     ]);
+    $update_user = \Session::getUser();
+
+    $img = \Accessor::post("img", "file");
+    if($img=='' || $_FILES["img"]['error'] == 4) {
+      $img = $update_user->getImage();
+    } else {
+      $fileerror = \Accessor::checkFile("img", ["maxsize" => 1000000, "resolution" => 500]);
+      if($fileerror)
+        array_push($errors,$fileerror);
+    }
+
     $error = !empty($errors);
 
     // Faire les validations
     if(!$error){
-      $update_user = \Session::getUser();
+      if($img!=$update_user->getImage()){
+        $img = uniqid().'.'.pathinfo($_FILES["img"]['name'], PATHINFO_EXTENSION);
+        \Accessor::saveFile($_FILES['img']['tmp_name'], $img);
+      }
       $update_user->setLogin(\Accessor::post("login", "string"));
       $update_user->setMail(\Accessor::post("email", "string"));
-      $update_user->setImage(\Accessor::post("img", "file"));
+      $update_user->setImage($img);
       $error = $update_user->update();
       if(!$error)
       {
@@ -136,7 +155,7 @@ class UserController extends Controller{
         $response->send();
       }
     }
-    $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', ["error" => $error, "errors" => $errors,'title' => 'Votre profile', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
+    $renderer = new \view\Renderer('Tinggy - Modification', 'profile.view.php', ["error" => $error, "errors" => $errors,'title' => 'Votre profil', 'description' => 'il est cool non ?', 'action' => 'Mettre à jour', 'check' => 'user/'.\Session::getUser()->getLogin().'/update']);
     $renderer->render();
   }
 

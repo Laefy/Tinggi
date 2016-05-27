@@ -162,5 +162,24 @@ class UserController extends Controller{
     $render = new \view\Renderer('Tinggy - Top du top', 'tops.view.php');
     $render->render();
   }
+
+  public static function getLogo() {
+    $user = \Session::getUser();
+    if ($user == NULL) {
+      return 'logo';
+    } else if ($user->getScore() < 5) {
+      return 'md-1';
+    } else if ($user->getScore() < 20) {
+      return 'md-2';
+    } else if ($user->getScore() < 50) {
+      return 'md-3';
+    } else if ($user->getScore() < 100) {
+      return 'md-4';
+    } else if ($user->getScore() < 1000) {
+      return 'md-5';
+    } else {
+      return 'md-6';
+    }
+  }
 }
 ?>

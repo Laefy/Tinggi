@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?=Router::$ROOT?>"><img src="<?=Router::$ROOT?>data/img/logo.svg" height="60" width="60" alt="logo" class="img-responsive center-block"></img>Tinggy</a>
+            <a class="navbar-brand" href="<?=Router::$ROOT?>"><img src="<?=Router::$ROOT?>data/img/<?=controller\UserController::getLogo()?>.svg" height="80" width="80" alt="logo" class="img-responsive center-block"></img>Tinggy</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

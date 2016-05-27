@@ -1,10 +1,42 @@
 <header>
     <div class="container">
         <div class="row">
+          <div id="all_like">
+            <img src="../data/img/crown.png" alt="Match" class="crown"></img>
+            <div class="all_like">500</div>
+          </div>
             <div class="col-lg-12">
                 <div class="intro-text">
                   <h4 class="name"><?= $data['post']->getTitle() ?></h4>
                   <span class="desc"><?= \controller\PostController::makeBaliseFromDesc($data['post']->getDesc()) ?></span>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 col-md-offset-3 post-like">
+                    <div class="like">
+                      <div class="nblike">500</div>
+                    </div>
+                    <div class="like">
+                      <div class="like_hover">
+                        <img src="../data/img/jaime_hover.png" alt="J'aime"></img>
+                      </div>
+                      <div class="like_hover_before">
+                        <img src="../data/img/jaime_blanc.png" alt="J'aime"></img>
+                      </div>
+                    </div>
+                    <div class="like">
+                      <div class="nbdislike">50</div>
+                    </div>
+                    <div class="like">
+                      <div class="like_hover">
+                        <img src="../data/img/jaime_pas_hover.png" alt="J'aime pas" class="like_grey"></img>
+                      </div>
+                      <div class="like_hover_before">
+                        <img src="../data/img/jaime_pas.png" alt="J'aime pas" class="like_white"></img>
+                      </div>
+                    </div>
+
+
+                  </div>
                 </div>
             </div>
         </div>

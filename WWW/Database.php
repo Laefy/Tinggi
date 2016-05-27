@@ -2,15 +2,15 @@
 class Database {
 
 	private static $host = '127.0.0.1';
-	private static $dbname = 'Tinggi';
+	private static $dbname = 'Tinggy';
 	private static $user = 'root';
-	private static $password = 'root';
+	private static $password = '';
 	private static $pdo = null;
 
 	public static function getInstance(){
 		if(is_null(self::$pdo)){
 			try {
-					self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname, self::$user, self::$password);
+					self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname, self::$user, self::$password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 			}
 			catch( PDOException $Exception ) {
     		echo $Exception->getMessage( ) , $Exception->getCode( );

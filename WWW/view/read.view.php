@@ -24,15 +24,13 @@
           </div>
           <div class="media-body">
             <h6 class="media-heading"><?= $comment->getAuthor()->getLogin().' '.$comment->getTime() ?></h6>
-            <?= $comment->getDesc() ?>
+            <?= $comment->getText() ?>
           </div>
         </div>
         <? }
-        if(\Session::isLogin())
-        {
+        if (\Session::isLogin()) {
           $user = \Session::getUser();
         ?>
-
         <div class="media">
           <div class="media-left">
             <a href="#">

@@ -22,7 +22,7 @@ class User {
   }
 
   private static function userFromRow($row) {
-    $user = new User($row['mail'], $row['pseudo'], $row['img'], $row['score']);
+    $user = new User($row['mail'], $row['pseudo'], $row['img'], $row['score'] == NULL ? 0 : $row['score']);
     $user->id = $row['id'];
     return $user;
   }

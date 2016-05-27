@@ -10,7 +10,7 @@ class Database {
 	public static function getInstance(){
 		if(is_null(self::$pdo)){
 			try {
-					self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname, self::$user, self::$password);
+					self::$pdo = new PDO('mysql:host='.self::$host.';dbname='.self::$dbname, self::$user, self::$password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 			}
 			catch( PDOException $Exception ) {
     		echo $Exception->getMessage( ) , $Exception->getCode( );

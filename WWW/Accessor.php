@@ -17,8 +17,8 @@ class Accessor {
         }
         return '';
       }
-      if(isset($_POST[$element]))
-      {
+
+      if(isset($_POST[$element])) {
         return $_POST[$element];
       }
       return '';
@@ -37,7 +37,7 @@ class Accessor {
       foreach ($elements as $key => $value) {
         if((!isset($_POST[$key])) || (empty($_POST[$key])))
         {
-          return ['le champs "'.$key.'" n\'est pas complété'];
+          return ['Le champ "'.$key.'" n\'est pas complété.'];
         }
         array_push($postElements,[$_POST[$key] => $value]);
       }
@@ -49,7 +49,7 @@ class Accessor {
       foreach ($elements as $key => $value) {
         if(!isset($_GET[$key]))
         {
-          return ['le champs "'.$key.'" n\'est pas complété'];
+          return ['Le champ "'.$key.'" n\'est pas complété.'];
         }
         array_push($getElements,[$_GET[$key] => $value]);
       }

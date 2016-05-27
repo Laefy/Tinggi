@@ -9,12 +9,12 @@ class User {
   private $score;
   private $posts = array();
 
-  public function __construct($mail, $pseudo, $img, $score) {
+  public function __construct($mail, $pseudo, $img) {
        $this->id = 0;
        $this->mail = $mail;
        $this->pseudo = $pseudo;
        $this->img = $img;
-       $this->score = $score;
+       $this->score = 0;
   }
 
   public function getId(){
@@ -22,8 +22,9 @@ class User {
   }
 
   private static function userFromRow($row) {
-    $user = new User($row['mail'], $row['pseudo'], $row['img'], $row['score'] == NULL ? 0 : $row['score']);
+    $user = new User($row['mail'], $row['pseudo'], $row['img']);
     $user->id = $row['id'];
+    $user->score = $row['score'] == NULL ? 0 : $row['score'];
     return $user;
   }
 
@@ -42,7 +43,7 @@ class User {
   }
 
   public static function getByLogin($login) {
-    $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('login' => $login));
+    $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('pseudo' => $login));
     return count($rows) > 0 ? self::userFromRow($rows[0]) : NULL;
   }
 

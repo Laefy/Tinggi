@@ -70,25 +70,38 @@ class UserController extends Controller{
         array_push($errors,$fileerror);
     }
 
-    $error = !empty($errors);
-
-    if(!$error)
-    {
-      // Enregistrer l'utilisateur dans la BDD //
+    if(empty($errors)) {
       if($img!='default.png'){
         $img = uniqid().'.'.pathinfo($_FILES["img"]['name'], PATHINFO_EXTENSION);
         \Accessor::saveFile($_FILES['img']['tmp_name'], $img);
       }
-      $new_user = new \model\User(\Accessor::post("email", "string"), \Accessor::post("login", "string"),$img, 0);
-      $new_user->save();
-      $new_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
-      var_dump(\model\User::getByLogin($new_user->getLogin()));
-      // Enregistrer l'utilisateur dans la session //
-      \Session::signIn($new_user);
-      $response = new \view\Response('redirect', '');
-      $response->send();
+
+      $mail = \Accessor::post("email", "string");
+      $login = \Accessor::post("login", "string");
+
+      // Check that the user is not already in the database.
+      if (\model\User::getByLogin($login) != NULL) {
+          echo 'prout';
+          array_push($errors, "Le login est déjà utilisé.");
+      }
+
+      if (\model\User::getByMail($mail) != NULL) {
+          array_push($errors, "L'adresse mail est déjà utilisée.");
+      }
+
+      if (empty($errors)) {
+        $new_user = new \model\User($mail, $login, $img);
+        $new_user->save();
+        $new_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
+
+        // Enregistrer l'utilisateur dans la session //
+        \Session::signIn(\model\User::getByLogin($new_user->getLogin()));
+        $response = new \view\Response('redirect', '');
+        $response->send();
+      }
     }
-    $datas = array("error" => $error, "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
+
+    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
     $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", $datas);
     $renderer->render();
   }
@@ -177,6 +190,25 @@ class UserController extends Controller{
   public function tops(){
     $render = new \view\Renderer('Tinggy - Top du top', 'tops.view.php');
     $render->render();
+  }
+
+  public static function getLogo() {
+    $user = \Session::getUser();
+    if ($user == NULL) {
+      return 'logo';
+    } else if ($user->getScore() < 5) {
+      return 'md-1';
+    } else if ($user->getScore() < 20) {
+      return 'md-2';
+    } else if ($user->getScore() < 50) {
+      return 'md-3';
+    } else if ($user->getScore() < 100) {
+      return 'md-4';
+    } else if ($user->getScore() < 1000) {
+      return 'md-5';
+    } else {
+      return 'md-6';
+    }
   }
 }
 ?>

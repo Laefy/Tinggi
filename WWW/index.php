@@ -25,7 +25,7 @@
 	Router::addRoute('user/(\w+)/update', 'controller\UserController', 'validmodif');
 
 	Router::addRoute('', 'controller\PostController', 'index');
-  Router::addRoute('match', 'controller\PostController', 'index');
+  	Router::addRoute('match', 'controller\PostController', 'index');
 	Router::addRoute('top', 'controller\PostController', 'top');
 	Router::addRoute('post/new', 'controller\PostController', 'create');
 	Router::addRoute('post/send', 'controller\PostController', 'send');

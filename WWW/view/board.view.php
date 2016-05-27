@@ -14,7 +14,7 @@
   <div class="row">
     <div class="col-lg-12 text-center">
         <div class="intro-text">
-          <span class="name">TOP TINGGI</span>
+          <span class="name">TOP TINGGY</span>
           <span class="desc">Hum... des classements !</span>
         </div>
     </div>
@@ -37,7 +37,7 @@
     <div class="col-lg-12 text-center">
         <div class="intro-text">
           <span class="name">VOS PUBLICATIONS</span>
-          <span class="desc">Pour les voir et les revoirs !</span>
+          <span class="desc">Pour les voir et les revoir !</span>
         </div>
     </div>
     <div class="col-xs-10 col-xs-offset-1 text-center">

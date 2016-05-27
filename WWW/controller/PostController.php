@@ -56,14 +56,14 @@ class PostController extends Controller{
   public function like($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleLike();
-    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response = new \view\Response("json",NULL,["user" => $post->getUserScore(), "likes" => $post->getLikes(), "dislikes" => $post->getDislikes()]);
     $response->send();
   }
 
   public function dislike($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleDislike();
-    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "likes" => $post->getLikes(), "dislikes" => $post->getDislikes()]);
     $response->send();
   }
 
@@ -111,6 +111,9 @@ class PostController extends Controller{
   public static function makeBaliseFromDesc($desc){
     echo PostController::baliseFromDescription($desc);
   }
+  public static function makeExplainedBaliseFromDesc($desc){
+    echo PostController::explainedBaliseFromDescription($desc);
+  }
 
   private static function baliseFromDescription($description) {
     if(preg_match(self::getPostDescPattern(),$description, $matches)){
@@ -121,6 +124,23 @@ class PostController extends Controller{
             return '<iframe src="' .str_replace('watch?v=','embed/',$matches['mediaContent']). '" frameborder="0" allowfullscreen></iframe>';
         default:
             return $matches['postDesc'];
+      }
+    }
+    else{
+      return 'Contenu indisponible';
+    }
+  }
+
+  private static function explainedBaliseFromDescription($description) {
+    if(preg_match(self::getPostDescPattern(),$description, $matches)){
+      switch ($matches['mediaType']) {
+        case 'img':
+          return '<img class="img_match" src="'.$matches['mediaContent'].'"><div class="desc">'.$matches['postDesc'].'</div>';
+        case 'vid':
+            return '<iframe src="' .str_replace('watch?v=','embed/',$matches['mediaContent']). '" frameborder="0" allowfullscreen></iframe>
+                    <div class="desc">'.$matches['postDesc'].'</div>';
+        default:
+            return '<div class="desc">'.$matches['postDesc'].'</div>';
       }
     }
     else{

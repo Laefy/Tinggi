@@ -8,37 +8,34 @@
             <div class="col-lg-12">
                 <div class="intro-text">
                   <h4 class="name"><?= $data['post']->getTitle() ?></h4>
-                  <strong class="author_post"><?= $data['post']->getAuthor()->getLogin()?> </strong><?=',  '.$data['post']->getTime().' '?><br />
-                  <span class="desc"><?= \controller\PostController::makeBaliseFromDesc($data['post']->getDesc()) ?></span>
-                  </div>
+                  <strong class="author_post"><?= $data['post']->getAuthor()->getLogin()?></strong><?=', '.$data['post']->getTime().' '?><br />
+                  <span class="desc"><?= \controller\PostController::makeExplainedBaliseFromDesc($data['post']->getDesc()) ?></span>
                 </div>
 
                 <div class="row">
                   <div class="col-md-6 col-md-offset-3 post-like">
                     <div class="like">
-                      <a class="nblike">500</a>
+                      <div class="nblike" id="js-likes"><?=$data['post']->getLikes()?></div>
                     </div>
-                    <div class="like">
+                    <a class="like" id="js-like-trigger" data-id="<?=$data['post']->getId()?>">
                       <div class="like_hover">
                         <img src="../data/img/jaime_hover.png" alt="J'aime"></img>
                       </div>
                       <div class="like_hover_before">
                         <img src="../data/img/jaime_blanc.png" alt="J'aime"></img>
                       </div>
-                    </div>
+                    </a>
                     <div class="like">
-                      <a class="nbdislike">50</a>
+                      <div class="nbdislike" id="js-dislikes"><?=$data['post']->getDislikes()?></div>
                     </div>
-                    <div class="like">
+                    <a class="like" id="js-dislike-trigger" data-id="<?=$data['post']->getId()?>">
                       <div class="like_hover">
                         <img src="../data/img/jaime_pas_hover.png" alt="J'aime pas" class="like_grey"></img>
                       </div>
                       <div class="like_hover_before">
                         <img src="../data/img/jaime_pas.png" alt="J'aime pas" class="like_white"></img>
                       </div>
-                    </div>
-
-
+                    </a>
                   </div>
                 </div>
             </div>
@@ -86,3 +83,6 @@
 <a href="<?= \Router::$ROOT ?>post/new">
   <img src="<?=\Router::$ROOT?>data/img/crosse.png" alt="croix" id="crosse"></img>
 </a>
+
+<script src="<?= \Router::$ROOT ?>data/js/ajax.js"></script>
+<script src="<?= \Router::$ROOT ?>data/js/post.js"></script>

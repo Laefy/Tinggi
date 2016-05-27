@@ -15,7 +15,7 @@
       <div class="row">
           <?php self::render_errors($data); ?>
           <div class="col-md-4 col-md-offset-4 text-center">
-            <form method="post" action="<?=Router::$ROOT.$data['check']?>">
+            <form method="post" action="<?=Router::$ROOT.$data['check']?>" enctype="multipart/form-data">
               <div class="form-group">
                 <input type="login" name="login" class="form-control" id="login" placeholder="pseudo" value="<?= \Accessor::post('login','string') ?>">
               </div>
@@ -30,7 +30,7 @@
               </div>
               <div class="form-group">
                 <label for="img">Choissisez une image de profil (facultatif)</label>
-                <input type="file" id="img">
+                <input type="file" id="img" name="img">
               </div>
               <div class="form-group">
                 <div class="g-recaptcha" data-sitekey="6Lcw9SATAAAAAM3zdE31DuiI9UNcMWCtK9bFdCL9"></div>

@@ -29,6 +29,33 @@ LIMIT 2;
 
 END$$
 
+DROP PROCEDURE IF EXISTS `POST_WIN`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `POST_WIN` (IN `id` INT)  NO SQL
+BEGIN
+
+UPDATE post p
+SET p.win = p.win + 1
+WHERE p.id = id;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `SIGN_IN`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SIGN_IN` (IN `login` VARCHAR(50), IN `password` VARCHAR(50))  NO SQL
+BEGIN
+
+DECLARE id INT DEFAULT 0;
+
+SELECT u.id INTO id FROM user u WHERE
+((u.mail LIKE login) OR (u.pseudo LIKE login))
+AND (u.password LIKE password)
+LIMIT 1;
+
+SELECT id;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `TOGGLE_DISLIKE`$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `TOGGLE_DISLIKE` (IN `user` INT, IN `post` INT)  NO SQL
 BEGIN
 
@@ -105,13 +132,15 @@ SELECT SUM(counter.love)
 INTO score
 FROM ((
 
-SELECT SUM(p.love) as love
-FROM score_post p
-WHERE p.id_post = id
+SELECT SUM(s.love) as love
+FROM score_post s
+WHERE s.id_post = id
 
 ) UNION (
 
-SELECT 0 as love
+SELECT p.win
+FROM post p
+WHERE p.id = id
 
 )) counter;
 
@@ -174,7 +203,10 @@ CREATE TABLE `comment` (
   `author` int(11) NOT NULL,
   `target` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `texte` text NOT NULL
+  `texte` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `author` (`author`),
+  KEY `target` (`target`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -188,22 +220,25 @@ CREATE TABLE `post` (
   `title` varchar(100) NOT NULL,
   `description` text NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `author` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `author` int(11) NOT NULL,
+  `win` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `author` (`author`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `post`
 --
 
-INSERT INTO `post` (`id`, `title`, `description`, `time`, `author`) VALUES
-(1, 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1),
-(2, 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4),
-(3, 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3),
-(4, 'test', 'bsilsidb', '2016-05-26 22:54:04', 9),
-(5, 'test', '					test', '2016-05-27 02:06:12', 55),
-(6, 'test', '					', '2016-05-27 02:22:17', 55),
-(7, 'un test video', 'vid:https://www.youtube.com/watch?v=O8yix8PZKlw\n					une video', '2016-05-27 02:57:11', 55),
-(8, 'Test image', 'img:http://media.tumblr.com/tumblr_mbjin0qrBL1r4fuk0.gif\n					un test', '2016-05-27 03:37:05', 55);
+INSERT INTO `post` (`id`, `title`, `description`, `time`, `author`, `win`) VALUES
+(1, 'Pingouin', 'C\'est un pingouin. Il respire par les fesses. Un jour, il s\'assoit et il meurt.', '2016-05-25 11:38:09', 1, 0),
+(2, 'C\'est un mec', 'C\'est un mec, il rentre dans un bar. Il rentre dans une chaise, il rentre dans une table, il rentre dans un cheval, il rentre dans Marion.', '2016-05-25 11:40:48', 4, 2),
+(3, 'Ville des paris', 'Quelle est la ville des paris ? Le Cap.\r\nParce que t\'es cap ou t\'es pas cap.', '2016-05-25 11:41:52', 3, 0),
+(4, 'test', 'bsilsidb', '2016-05-26 22:54:04', 9, 0),
+(5, 'test', '					test', '2016-05-27 02:06:12', 55, 0),
+(6, 'test', '					', '2016-05-27 02:22:17', 55, 0),
+(7, 'un test video', 'vid:https://www.youtube.com/watch?v=O8yix8PZKlw\n					une video', '2016-05-27 02:57:11', 55, 0),
+(8, 'Test image', 'img:http://media.tumblr.com/tumblr_mbjin0qrBL1r4fuk0.gif\n					un test', '2016-05-27 03:37:05', 55, 0);
 
 -- --------------------------------------------------------
 

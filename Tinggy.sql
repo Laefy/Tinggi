@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2016 at 11:10 AM
+-- Generation Time: May 27, 2016 at 01:09 PM
 -- Server version: 5.7.9
 -- PHP Version: 5.6.16
 
@@ -109,6 +109,54 @@ END$$
 --
 -- Functions
 --
+DROP FUNCTION IF EXISTS `GET_DISLIKES_POST`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_DISLIKES_POST` (`id` INT) RETURNS INT(11) NO SQL
+BEGIN
+DECLARE likes INT DEFAULT 0;
+
+SELECT SUM(counter.love)
+INTO likes
+FROM ((
+
+SELECT SUM(s.love) as love
+FROM score_post s
+WHERE s.id_post = id AND s.love = -1
+
+) UNION (
+
+SELECT 0
+    
+)) counter;
+
+
+RETURN likes;
+
+END$$
+
+DROP FUNCTION IF EXISTS `GET_LIKES_POST`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `GET_LIKES_POST` (`id` INT) RETURNS INT(11) NO SQL
+BEGIN
+DECLARE likes INT DEFAULT 0;
+
+SELECT SUM(counter.love)
+INTO likes
+FROM ((
+
+SELECT SUM(s.love) as love
+FROM score_post s
+WHERE s.id_post = id AND s.love = 1
+
+) UNION (
+
+SELECT 0
+    
+)) counter;
+
+
+RETURN likes;
+
+END$$
+
 DROP FUNCTION IF EXISTS `GET_SCORE_COMMENT`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `GET_SCORE_COMMENT` (`id` INT) RETURNS INT(11) NO SQL
 BEGIN
@@ -189,6 +237,8 @@ CREATE TABLE IF NOT EXISTS `best_posts` (
 ,`time` timestamp
 ,`author` int(11)
 ,`score` int(11)
+,`likes` int(11)
+,`dislikes` int(11)
 );
 
 -- --------------------------------------------------------
@@ -242,6 +292,19 @@ CREATE TABLE IF NOT EXISTS `post` (
   KEY `author` (`author`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `post` (`id`, `title`, `description`, `time`, `author`, `win`) VALUES
+(2, 'Hydra Captain America', 'img:http://img-9gag-fun.9cache.com/photo/am9E9Vo_700b_v2.jpg\nTra?tre', '2016-05-27 12:27:18', 1, 0),
+(3, 'Sloth', 'vid:https://www.youtube.com/watch?v=fjuzCS5_tMY\nSloth', '2016-05-27 12:28:06', 1, 0),
+(4, 'Un chat qui aime manger', 'img:http://charityowl.com/wp-content/uploads/2016/05/funny-cat-meme-17-charity-owl.jpg\nNom nom nom', '2016-05-27 12:29:21', 1, 0),
+(6, 'L?zard', 'img:http://apikabu.ru/img_n/2012-08_5/954.jpg\noui', '2016-05-27 12:30:56', 1, 0),
+(7, 'Marmotte', 'img:https://s-media-cache-ak0.pinimg.com/736x/41/54/31/41543117db19bad2dfa0468e49a1c086.jpg\nMarmotte mignonne', '2016-05-27 12:31:31', 1, 0),
+(8, 'Situtation sous contr?le', 'img:https://www.humour.com/medias/photos/2013/600x404/l-20130926031606.jpg\nOui', '2016-05-27 12:33:59', 2, 0),
+(9, 'Je ne fais que passer', 'img:http://perdstontemps.ca/wp-content/uploads/2013/11/1XPhbDE.gif\nJe ne fais que passer', '2016-05-27 12:34:31', 2, 0),
+(10, 'Game of Thrones Marcheur Blanc', 'img:https://k60.kn3.net/taringa/3/0/4/1/B/7/PanighelB/D21.gif\nSwag', '2016-05-27 12:34:54', 2, 0),
+(11, 'BAM LA VITRE', 'img:http://perdstontemps.ca/wp-content/uploads/2013/11/0nvq3Cz.gif\nPrend cher le chien', '2016-05-27 12:35:43', 2, 0),
+(12, 'Rigolo', 'img:http://m.memegen.com/fbt4ft.jpg\nOui', '2016-05-27 12:37:28', 3, 0),
+(13, 'Batman russe', 'vid:https://www.youtube.com/watch?v=Dgf4JjSuMhc\nCoucou Batman', '2016-05-27 12:40:51', 3, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -256,6 +319,8 @@ CREATE TABLE IF NOT EXISTS `post_view` (
 ,`time` timestamp
 ,`author` int(11)
 ,`score` int(11)
+,`likes` int(11)
+,`dislikes` int(11)
 );
 
 -- --------------------------------------------------------
@@ -307,6 +372,11 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `mail` (`mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `user` (`id`, `pseudo`, `mail`, `password`, `img`) VALUES
+(1, 'Quentin', 'quentin.quemere@gmail.com', 'e7eb64985fe1ed189879a55da9940d25', 'default.png'),
+(2, 'Bzh', 'coucou@gmail.com', 'e7eb64985fe1ed189879a55da9940d25', 'default.png'),
+(3, 'Yolo', 'swag@gmail.com', 'e7eb64985fe1ed189879a55da9940d25', 'default.png');
+
 -- --------------------------------------------------------
 
 --
@@ -329,7 +399,7 @@ CREATE TABLE IF NOT EXISTS `user_view` (
 --
 DROP TABLE IF EXISTS `best_posts`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts`  AS  select `post_view`.`id` AS `id`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score` from `post_view` order by `post_view`.`score` desc limit 10 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `best_posts`  AS  select `post_view`.`id` AS `id`,`post_view`.`title` AS `title`,`post_view`.`description` AS `description`,`post_view`.`time` AS `time`,`post_view`.`author` AS `author`,`post_view`.`score` AS `score`,`post_view`.`likes` AS `likes`,`post_view`.`dislikes` AS `dislikes` from `post_view` order by `post_view`.`score` desc limit 10 ;
 
 -- --------------------------------------------------------
 
@@ -347,7 +417,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `post_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `post_view`  AS  select `p`.`id` AS `id`,`p`.`title` AS `title`,`p`.`description` AS `description`,`p`.`time` AS `time`,`p`.`author` AS `author`,`GET_SCORE_POST`(`p`.`id`) AS `score` from `post` `p` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `post_view`  AS  select `p`.`id` AS `id`,`p`.`title` AS `title`,`p`.`description` AS `description`,`p`.`time` AS `time`,`p`.`author` AS `author`,`GET_SCORE_POST`(`p`.`id`) AS `score`,`GET_LIKES_POST`(`p`.`id`) AS `likes`,`GET_DISLIKES_POST`(`p`.`id`) AS `dislikes` from `post` `p` ;
 
 -- --------------------------------------------------------
 

@@ -29,7 +29,7 @@
                 <input type="password" name="verifpassword" class="form-control" id="verifpassword" placeholder="confirmation du mot de passe" value="">
               </div>
               <div class="form-group">
-                <label for="img">Choissisez une image de profil (facultatif)</label>
+                <label for="img">Choisissez une image de profil (facultatif)</label>
                 <input type="file" id="img" name="img">
               </div>
               <div class="form-group">

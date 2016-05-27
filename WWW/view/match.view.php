@@ -21,6 +21,7 @@
           include \Router::$WEBROOT.'view/match.post.view.php';
           ?>
         </div>
+        <img src="data/img/like_match.png" alt="like" class="overlay">
       </a>
       <a class="btn btn-default btn-match" href="<?= \Router::$ROOT.'post/'.$post->getId() ?>" role="button">Détails</a>
     </div>
@@ -32,6 +33,7 @@
           include \Router::$WEBROOT.'view/match.post.view.php';
           ?>
         </div>
+        <img src="data/img/like_match.png" alt="like" class="overlay">
       </a>
       <a class="btn btn-default btn-match" href="<?= \Router::$ROOT.'post/'.$post->getId() ?>" role="button">Détails</a>
     </div>

@@ -19,7 +19,7 @@ class Comment {
   }
 
   private static function commentFromRow($row) {
-    $comment = new Comment(User::getById($row['author']), NULL, $row['text']);
+    $comment = new Comment(User::getById($row['author']), NULL, $row['texte']);
     $comment->id = $row['id'];
     $comment->time = $row['time'];
     $comment->score = $row['score'];
@@ -27,11 +27,11 @@ class Comment {
   }
 
   public static function getCommentsByPost($post) {
-      $rows = \Database::select(['*'], 'comment', array('target' => $post->getId()));
+      $rows = \Database::select(['*'], 'comment_view', array('target' => $post->getId()));
       $comments = array();
 
       foreach ($rows as $row) {
-        $comment = commentFromRow($row);
+        $comment = self::commentFromRow($row);
         $comment->target = $post;
         array_push($comments, $comment);
       }
@@ -40,12 +40,10 @@ class Comment {
   }
 
 
-  public function getDesc(){
-    return $this->desc;
+  public function getText(){
+    return $this->text;
   }
-  public function getType(){
-    return $this->type;
-  }
+
   public function getTime(){
     return $this->time;
   }

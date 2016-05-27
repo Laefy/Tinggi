@@ -59,6 +59,9 @@ class PostController extends Controller{
       'post' => $VIEW_post
     );
 
+    $data = \model\Post::getPostById($id);
+    $data->loadComments();
+
     $render = new \view\Renderer('Tinggy - '.$VIEW_post->getTitle(), 'read.view.php', $VIEW_user, $data);
     $render->render();
   }

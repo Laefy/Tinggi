@@ -22,7 +22,7 @@ class User {
   }
 
   private static function userFromRow($row) {
-    $user = new User($row['mail'], $row['pseudo'], $row['img'], $row['score']);
+    $user = new User($row['mail'], $row['pseudo'], $row['img'], $row['score'] == NULL ? 0 : $row['score']);
     $user->id = $row['id'];
     return $user;
   }
@@ -39,7 +39,7 @@ class User {
   }
 
   public static function getById($id){
-    $row = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', [])[0];
+    $row = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('id' => $id))[0];
     return User::userFromRow($row);
   }
 

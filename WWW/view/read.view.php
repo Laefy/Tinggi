@@ -3,8 +3,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="intro-text">
-                  <span class="name">Article</span>
-                  <span class="desc">texte</span>
+                  <span class="name"><?=$data->getTitle()?></span>
+                  <span class="desc"><?=$data->getDesc()?></span>
                 </div>
             </div>
         </div>
@@ -14,17 +14,21 @@
   <div class="row">
     <div class="col-xs-10 col-xs-offset-1">
       <div class="col-md-8 col-md-offset-2">
-        <div class="media">
-          <div class="media-left">
-            <a href="#">
-              <!--<img class="media-object" src="..." alt="...">-->
-            </a>
-          </div>
-          <div class="media-body">
-            <h6 class="media-heading">Author</h6>
-            un super commentaire
-          </div>
-        </div>
+        <?php
+          foreach ($data->getComments() as $comment) {
+            echo '<div class="media">
+              <div class="media-left">
+                <a href="#">
+                  <!--<img class="media-object" src="..." alt="...">-->
+                </a>
+              </div>
+              <div class="media-body">
+                <h6 class="media-heading">' .$comment->getAuthor()->getLogin(). '</h6>
+                ' .$comment->getText(). '
+              </div>
+            </div>';
+          }
+        ?>
         <div class="media">
           <div class="media-left">
             <a href="#">

@@ -62,7 +62,7 @@ class UserController extends Controller{
     }
 
     $img = \Accessor::post("img", "file");
-    if($img=='') {
+    if($img=='' || $_FILES["img"]['error'] == 4) {
       $img = 'default.png';
     } else {
       $fileerror = \Accessor::checkFile("img", ["maxsize" => 1000000, "resolution" => 500]);
@@ -81,7 +81,6 @@ class UserController extends Controller{
 
       // Check that the user is not already in the database.
       if (\model\User::getByLogin($login) != NULL) {
-          echo 'prout';
           array_push($errors, "Le login est déjà utilisé.");
       }
 
@@ -128,7 +127,7 @@ class UserController extends Controller{
     $update_user = \Session::getUser();
 
     $img = \Accessor::post("img", "file");
-    if($img=='') {
+    if($img=='' || $_FILES["img"]['error'] == 4) {
       $img = $update_user->getImage();
     } else {
       $fileerror = \Accessor::checkFile("img", ["maxsize" => 1000000, "resolution" => 500]);
@@ -140,6 +139,10 @@ class UserController extends Controller{
 
     // Faire les validations
     if(!$error){
+      if($img!=$update_user->getImage()){
+        $img = uniqid().'.'.pathinfo($_FILES["img"]['name'], PATHINFO_EXTENSION);
+        \Accessor::saveFile($_FILES['img']['tmp_name'], $img);
+      }
       $update_user->setLogin(\Accessor::post("login", "string"));
       $update_user->setMail(\Accessor::post("email", "string"));
       $update_user->setImage($img);

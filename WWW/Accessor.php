@@ -11,7 +11,6 @@ class Accessor {
 
     public static function post($element, $type) {
       if($type == "file"){
-        print_r($_POST);
         if(isset($_FILES[$element])){
           return $_FILES[$element];
         }
@@ -135,7 +134,7 @@ class Accessor {
     static function checkFile($var,$param){
 
       if ($_FILES[$var]['error']) {
-          switch ($_FILES['nom_du_fichier']['error']){
+          switch ($_FILES[$var]['error']){
                    case 1: // UPLOAD_ERR_INI_SIZE
                     return "Le fichier dépasse la limite autorisée par le serveur (fichier php.ini) !";
                    break;

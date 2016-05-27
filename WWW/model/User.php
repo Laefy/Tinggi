@@ -28,29 +28,27 @@ class User {
   }
 
   public static function getTopTen(){
-      $rows = \Database::select(['*'], 'best_users', []);
+      $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'best_users', []);
       $users = array();
-
       foreach ($rows as $row) {
-          array_push(users, User::userFromRow($row));
+          array_push($users, self::userFromRow($row));
       }
-
-      return users;
+      return $users;
   }
 
   public static function getById($id){
-    $row = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', [])[0];
-    return User::userFromRow($row);
+    $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('id' => $id));
+    return count($rows) > 0 ? self::userFromRow($rows[0]) : NULL;
   }
 
   public static function getByLogin($login) {
     $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('login' => $login));
-    return count($rows) > 0 ? userFromRow($rows[0]) : NULL;
+    return count($rows) > 0 ? self::userFromRow($rows[0]) : NULL;
   }
 
   public static function getByMail($mail) {
     $rows = \Database::select(['id', 'mail', 'pseudo', 'img', 'score'], 'user_view', array('mail' => $mail));
-    return count($rows) > 0 ? userFromRow($rows[0]) : NULL;
+    return count($rows) > 0 ? self::userFromRow($rows[0]) : NULL;
   }
 
   public function loadPosts() {
@@ -60,6 +58,11 @@ class User {
   public function getLogin(){
     return $this->pseudo;
   }
+
+  public function getMail(){
+    return $this->mail;
+  }
+
   public function getPassword(){
     return \Database::select(['password'], 'user', array('id'=>$this->id))[0]['password'];
   }
@@ -76,7 +79,7 @@ class User {
   }
 
   public function setPassword($password){
-    \Database::update(array('password' => '\''.$password.'\''), 'user', array('id'=>$this->id));
+    \Database::update(array('password' => $password), 'user', array('pseudo'=> $this->pseudo));
   }
 
   public function setPosts($posts){
@@ -96,11 +99,11 @@ class User {
   }
 
   public function save() {
-    \Database::insert(array('mail' => '\''.$this->mail.'\'', 'pseudo' => '\''.$this->pseudo.'\'', 'img' => $this->img), 'user');
+    \Database::insert(array('mail' => $this->mail, 'pseudo' => $this->pseudo, 'img' => $this->img), 'user');
   }
 
   public function update() {
-    \Database::update(array('mail' => '\''.$this->mail.'\'', 'pseudo' => '\''.$this->pseudo.'\'', 'img' => $this->img), 'user', array('id' => $this->id));
+    \Database::update(array('mail' => $this->mail, 'pseudo' => $this->pseudo, 'img' => $this->img), 'user', array('id' => $this->id));
   }
 
 }

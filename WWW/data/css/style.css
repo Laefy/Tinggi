@@ -1,68 +1,94 @@
-/*!
- * Start Bootstrap - Freelancer Bootstrap Theme (http://startbootstrap.com)
- * Code licensed under the Apache License v2.0.
- * For details, see http://www.apache.org/licenses/LICENSE-2.0.
- */
+html {
+  background-color: #FF4D00;
+}
+.navbar-brand {
+  margin-top: -12px;
+}
+.navbar-brand img{
+  display: inline-block;
+  vertical-align: middle;
+  padding-right: 10px;
+}
 
- 
- /* Modif */
- 
- .size{
-	 font-size:3em;
- }
+.btn-match {
+  width: 50%;
+}
+
+.match {
+  margin-bottom: 100px;
+}
+
+.thumbnail {
+  min-height: 200px;
+  text-align: center;
+}
+.thumbnail iframe{
+  width: 100%;
+  min-height: 300px;
+}
+
+.thumbnail img{
+  max-height: 300px;
+  width: inherit;
+}
+
  #crosse{
 	 position:fixed;
 	 right:2%;
 	 bottom:2%;
-	 width:50px;
+	 width:70px;
 	 z-index:100;
  }
+
  .class_match{
 	width:100%;
 	height:100%;
 	position:relative;
  }
-.caption img{	
+
+.caption img{
 	width:100%;
 	z-index:90;
 }
+
 .like_match img{
-	width:50%;
-	display: table-cell;
-    vertical-align: middle;
-	z-index:1;
+  width:50%;
+  display: table-cell;
+  vertical-align: middle;
+  z-index:1;
 }
+
 .col-md-1{
 	display:block;
 	width:100%;
 }
+
 .img-responsive.like{
-	width:50px;
-	display:inline;
-	float:right;
-	margin:5px;
-	  transition:  1s;
-    -webkit-transition: 1s;
+  width:50px;
+  display:inline;
+  float:right;
+  margin:5px;
+  transition:  1s;
+  -webkit-transition: 1s;
 }
 
-
 .like{
-position:relative;
-float: left;
-margin: 5px;
+  position:relative;
+  float: left;
+  margin: 5px;
 }
 
 
 
 .like_hover{
-position:absolute;
-opacity:1;
+  position:absolute;
+  opacity:1;
 }
 
 .like_before_hover{
-opacity:1;
+  opacity:1;
   transition:  0.5s;
-    -webkit-transition: 0.5s;
+  -webkit-transition: 0.5s;
 }
 
 .like_before_hover:hover{
@@ -102,7 +128,7 @@ opacity:1;
 	transition:0.5s;
 	-webkit-transition:0.5s;
 }
-.like_match{	
+.like_match{
 	position:absolute;
 }
 .class_match.left{
@@ -132,14 +158,7 @@ opacity:1;
 	font-size:3em;
 }
 @media (min-width: 992px){
-	
-	.thumbnail{
-		width:90%;
-	}
-	.thumbnail.left{
-		margin-left:10%;
-	}
-	
+
 	.description.left, .commentaire.left, .like.left{
 		margin-left:10%;
 	}
@@ -154,7 +173,7 @@ opacity:1;
 	.thumbnail{
 		width:100%;
 	}
-	
+
 	.description.left, .commentaire.left, .like.left{
 		margin-left:0%;
 	}

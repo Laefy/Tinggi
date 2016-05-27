@@ -13,23 +13,14 @@
 <section id="view" class="container-fluid">
   <div class="row">
     <div class="col-xs-10 col-xs-offset-1">
-      <a href="#" class="thumbnail">
-        <!--<img src="..." alt="...">-->
-        <div class="caption">
-          <h3>post 1</h3>
-          <p>description</p>
-        </div>
+      <?php foreach ($data['posts'] as $post) { ?>
+      <a href="<?=\Router::$ROOT.'post/'.$post->getId()?>" class="thumbnail">
+        <?php include \Router::$WEBROOT.'view/match.post.view.php';?>
       </a>
-      <a href="#" class="thumbnail">
-        <!--<img src="..." alt="...">-->
-        <div class="caption">
-          <h3>post 2</h3>
-          <p>description</p>
-        </div>
-      </a>
+      <?php } ?>
     </div>
   </div>
 </section>
-<a href="post/new">
+<a href="<?= \Router::$ROOT ?>post/new">
   <img src="<?=\Router::$ROOT?>data/img/crosse.png" alt="croix" id="crosse"></img>
 </a>

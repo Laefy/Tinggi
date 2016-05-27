@@ -54,7 +54,7 @@ class Database {
 
 			foreach ($where as $key => $value) {
 				++$i;
-				$req .= $key.' LIKE '.$value;
+				$req .= $key.' LIKE \''.$value.'\'';
 				if($i < $last)
 				{
 					$req .= ' AND ';
@@ -75,7 +75,7 @@ class Database {
 		$i=0;
 		foreach ($elements as $key => $value) {
 			$req.= $key;
-			$values.= $value;
+			$values.= '\''.$value.'\'';
 
 			if($i < $last)
 			{
@@ -96,7 +96,7 @@ class Database {
 		$req .= ' SET';
 
 		foreach($elements as $key => $value) {
-			$req .= ' '.$key. ' = ' .$value;
+			$req .= ' '.$key. ' = \'' .$value.'\'';
 			if($i < $last)
 			{
 				$req .= ',';
@@ -109,7 +109,7 @@ class Database {
 		$last = count($where) - 1;
 		foreach ($where as $key => $value) {
 			++$i;
-			$req .= $key.' LIKE '.$value;
+			$req .= $key.' LIKE \''.$value.'\'';
 			if($i < $last)
 			{
 				$req .= ' AND ';
@@ -118,6 +118,25 @@ class Database {
 		}
 		$req.= ' ;';
 		return self::queryVoid($req);
+	}
+
+	public static function call_function($name,$param = [])
+	{
+		$i=0;
+		$list= '';
+		$values = array();
+		foreach($param as $p)
+		{
+			$values[':P'.$i] = $p;
+			if($i != 0) $list.=',';
+			$list.=':P'.$i;
+			++$i;
+		}
+		$db = self::getInstance();
+		$stmt = $db->prepare("SELECT `$name`(".$list.") AS `result`;");
+		$stmt->execute($values);
+		$tab = $stmt->fetch(PDO::FETCH_NUM);
+		return $tab[0];
 	}
 
 	public static function call($procedure,$parameters){
@@ -138,7 +157,7 @@ class Database {
 	}
 
 	public static function delete($id,$table){
-		return self::queryVoid('DELETE FROM '.$table.' WHERE id LIKE '.$id.' ;');
+		return self::queryVoid('DELETE FROM '.$table.' WHERE id LIKE \''.$id.'\' ;');
 	}
 }
 ?>

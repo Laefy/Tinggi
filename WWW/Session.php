@@ -1,13 +1,18 @@
 <?php
+require "common/recaptchalib.php";
+
 class Session{
 
 	private static $user;
 	private static $auth;
 	private static $salt;
-	private static $id1;
-	private static $id2;
+	private static $g_key = '6Lcw9SATAAAAAM3zdE31DuiI9UNcMWCtK9bFdCL9';
+	private static $g_key_secret = '6Lcw9SATAAAAAEssaKP_aT8zoUPvMl8z2Hi-nqis';
 
   public static function init(){
+			ini_set('session.use_cookies', 1);
+			ini_set('session.use_only_cookies', 1);
+			ini_set('session.use_trans_sid', false);
 			session_start();
 			self::$user = null;
 			self::$auth = self::getUserInformation();
@@ -15,9 +20,25 @@ class Session{
 			Session::connection();
   }
 
+	public static function getGoogleKey() {
+		return self::$g_key;
+	}
+
+	public static function getGoogleSecretKey() {
+		return self::$g_key_secret;
+	}
+
+	public static function isNotARobot() {
+			$reCaptcha = new ReCaptcha(self::$g_key_secret);
+			if(isset($_POST["g-recaptcha-response"])) {
+				$resp = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"],$_POST["g-recaptcha-response"]);
+				return  ($resp != null && $resp->success);
+			}
+	}
+
 	public static function signIn($user){
 		self::$user = $user;
-		$_SERVER['user_id'] = $user->getId();
+		$_SESSION['user_id'] = $user->getId();
 	}
 
 	private static function getUserInformation(){
@@ -26,22 +47,22 @@ class Session{
 
 	private static function connection(){
 
-			if( (isset($_SERVER['auth'])) && (isset($_SERVER['user_id'])) )
+			if( (isset($_SESSION['auth'])) && (isset($_SESSION['user_id'])) )
 			{
-				if(strcmp(encrypt(self::$auth,self::getUserInformation()) == 0)){
-					if($_SERVER['user_id'] != 0)
+				if(strcmp(self::$auth,self::getUserInformation()) == 0){
+					if($_SESSION['user_id'] != 0)
 					{
-						self::$user = User::getById($_SERVER['user_id']);
+						self::$user = \model\User::getById($_SESSION['user_id']);
 					}
 					return true;
 				}
 				else
 				{
-					session::reset();
+					self::reset();
 				}
 			}
-			$_SERVER['auth'] = self::getUserInformation();
-			$_SERVER['user_id'] = 0;
+			$_SESSION['auth'] = self::getUserInformation();
+			$_SESSION['user_id'] = 0;
 	}
 
 	public static function getUser(){
@@ -51,32 +72,26 @@ class Session{
 	public static function isLogin(){
 		return !is_null(self::$user);
 	}
-	/*-------PAS FINIS--------------------------------*/
-	/*public static function login($pseudo, $key){
-		if())
-			return true;
-		return false;
-	}*/
 
-	public static function getMatch(){
-
-		if(self::$id1 != null && self::$id2 != null){
-			return $match = array(self::$id1,self::$id2);
+	public static function getVar($name){
+		if(isset($_SESSION[$name]))
+		{
+			return $_SESSION[$name];
 		}
-		return null;
+		return false;
 
 	}
 
-	public static function saveMatch($lambda,$lambda2){
-		self::$id1 = $lambda;
-		self::$id2 = $lambda2;
+	public static function saveVar($name,$var){
+		$_SESSION[$name] = $var;
 	}
 
-	public static function resetMatch(){
-		self::$id1 = null;
-		self::$id2 = null;
+	public static function resetVar($name){
+		unset($_SESSION[$name]);
 	}
+
 	public static function reset(){
+		session_unset();
 		session_destroy();
 		session_start();
 		self::connection();

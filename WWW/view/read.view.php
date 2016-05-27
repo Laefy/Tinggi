@@ -8,9 +8,10 @@
             <div class="col-lg-12">
                 <div class="intro-text">
                   <h4 class="name"><?= $data['post']->getTitle() ?></h4>
-                  <strong><?= $data['post']->getAuthor()->getLogin().'  -  '.$data['post']->getTime().' '?> <?= $data['post']->getScore() ?></strong><br />
+                  <strong class="author_post"><?= $data['post']->getAuthor()->getLogin()?></strong><?=', '.$data['post']->getTime().' '?><br />
                   <span class="desc"><?= \controller\PostController::makeExplainedBaliseFromDesc($data['post']->getDesc()) ?></span>
                 </div>
+
                 <div class="row">
                   <div class="col-md-6 col-md-offset-3 post-like">
                     <div class="like">

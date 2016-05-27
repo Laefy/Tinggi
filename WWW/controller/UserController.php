@@ -55,11 +55,19 @@ class UserController extends Controller{
       "email"=>["string"=>["min"=>10, "max" => 50]],
       "password"=>["string"=>["min"=>8, "max" => 50]],
       "verifpassword"=>["comp"=>[\Accessor::post("password", "string")]]
-      //Vérification pour l'image de profil à faire
     ]);
 
     if(!\Session::isNotARobot()){
         array_push($errors,"Vous êtes un robot ! :/");
+    }
+
+    $img = \Accessor::post("img", "file");
+    if($img=='') {
+      $img = 'default.png';
+    } else {
+      $fileerror = \Accessor::checkFile("img", ["maxsize" => 1000000, "resolution" => 500]);
+      if($fileerror)
+        array_push($errors,$fileerror);
     }
 
     $error = !empty($errors);
@@ -67,18 +75,16 @@ class UserController extends Controller{
     if(!$error)
     {
       // Enregistrer l'utilisateur dans la BDD //
-      $img = \Accessor::post("img", "file");
-      if(!$img)
-      {
-        $img = 'default.png';
+      if($img!='default.png'){
+        $img = uniqid().'.'.pathinfo($_FILES["img"]['name'], PATHINFO_EXTENSION);
+        \Accessor::saveFile($_FILES['img']['tmp_name'], $img);
       }
-      $new_user = new \model\User(\Accessor::post("email", "string"), \Accessor::post("login", "string"), $img, 0);
+      $new_user = new \model\User(\Accessor::post("email", "string"), \Accessor::post("login", "string"),$img, 0);
       $new_user->save();
       $new_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
       var_dump(\model\User::getByLogin($new_user->getLogin()));
-      exit();
       // Enregistrer l'utilisateur dans la session //
-      \Session::signIn(\model\User::getByLogin($new_user->getLogin()));
+      \Session::signIn($new_user);
       $response = new \view\Response('redirect', '');
       $response->send();
     }
@@ -106,14 +112,24 @@ class UserController extends Controller{
       "verifpassword"=>["comp"=>[\Accessor::post("password", "string")]]
       //Vérification pour l'image de profil à faire
     ]);
+    $update_user = \Session::getUser();
+
+    $img = \Accessor::post("img", "file");
+    if($img=='') {
+      $img = $update_user->getImage();
+    } else {
+      $fileerror = \Accessor::checkFile("img", ["maxsize" => 1000000, "resolution" => 500]);
+      if($fileerror)
+        array_push($errors,$fileerror);
+    }
+
     $error = !empty($errors);
 
     // Faire les validations
     if(!$error){
-      $update_user = \Session::getUser();
       $update_user->setLogin(\Accessor::post("login", "string"));
       $update_user->setMail(\Accessor::post("email", "string"));
-      $update_user->setImage(\Accessor::post("img", "file"));
+      $update_user->setImage($img);
       $error = $update_user->update();
       if(!$error)
       {

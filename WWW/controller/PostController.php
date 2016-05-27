@@ -105,7 +105,7 @@ class PostController extends Controller{
 
 
   public static function getPostDescPattern(){
-    return '/^((?P<mediaType>\w+):\s*(?P<mediaContent>[\-a-zA-Z0-9\/\_\.:=\?]+))?(\s*(?P<postDesc>.*))$/';
+    return '/^((?P<mediaType>\w+):\s*(?P<mediaContent>[\-a-zA-Z0-9\/\_\.:=\?]+))?(\s*(?P<postDesc>(.|\n)*))$/';
   }
 
   public static function makeBaliseFromDesc($desc){

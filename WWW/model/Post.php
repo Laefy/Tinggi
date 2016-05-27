@@ -10,6 +10,8 @@ class Post {
     private $comments;
     private $score;
     private $userScore;
+    private $likes;
+    private $dislikes;
 
     public function __construct($title, $desc, $author) {
         $this->id = 0;
@@ -20,6 +22,8 @@ class Post {
         $this->comments = array();
         $this->score = 0;
         $this->userScore = 0;
+        $this->likes = 0;
+        $this->dislikes = 0;
     }
 
     public function getId(){
@@ -54,11 +58,21 @@ class Post {
         return $this->userScore;
     }
 
+    public function getLikes() {
+        return $this->likes;
+    }
+
+    public function getDislikes() {
+        return $this->dislikes;
+    }
+
     private static function postFromRow($row, $user = NULL) {
         $post = new Post($row['title'], $row['description'], $user == NULL ? User::getById($row['author']) : $user);
         $post->id = $row['id'];
         $post->time = $row['time'];
         $post->score = $row['score'];
+        $post->likes = $row['likes'];
+        $post->dislikes = $row['dislikes'];
         return $post;
     }
 
@@ -98,7 +112,11 @@ class Post {
         $user = \Session::getUser();
         if ($user != NULL) {
             $this->userScore = \Database::call('TOGGLE_LIKE', [$user->getId(), $this->id])[0]['love'];
-            $this->score = \Database::select(['score'], 'post_view', array('id_post' => $this->id))[0]['score'];
+            $updated = \Database::select(['score', 'likes', 'dislikes'], 'post_view', array('id' => $this->id))[0];
+
+            $this->score = $updated['score'];
+            $this->likes = $updated['likes'];
+            $this->dislikes = $updated['dislikes'];
         }
     }
 
@@ -106,7 +124,11 @@ class Post {
         $user = \Session::getUser();
         if ($user != NULL) {
             $this->userScore = \Database::call('TOGGLE_DISLIKE', [$user->getId(), $this->id])[0]['love'];
-            $this->score = \Database::select(['score'], 'post_view', array('id_post' => $this->id))[0]['score'];
+            $updated = \Database::select(['score', 'likes', 'dislikes'], 'post_view', array('id' => $this->id))[0];
+
+            $this->score = $updated['score'];
+            $this->likes = $updated['likes'];
+            $this->dislikes = $updated['dislikes'];
         }
     }
 

@@ -44,5 +44,5 @@
   <img src="<?= \Router::$ROOT ?>data/img/crosse.png" alt="croix" id="crosse"></img>
 </a>
 
-<script src="data/js/ajax.js"></script>
-<script src="data/js/match.js"></script>
+<script src="<?= \Router::$ROOT ?>data/js/ajax.js"></script>
+<script src="<?= \Router::$ROOT ?>data/js/match.js"></script>

@@ -42,15 +42,15 @@ class PostController extends Controller{
   }
 
   public function match(){
-      $matches = \model\Post::getMatchPosts();
-      $m1 = $matches[0];
-      $m2 = $matches[1];
-      $response = new \view\Response('json', NULL, array("id1" => $m1->getId(), "title1" => $m1->getTitle(), "description1" => PostController::baliseFromDescription($m1->getDesc()), "id2" => $m2->getId(), "title2" => $m2->getTitle(), "description2" => PostController::baliseFromDescription($m1->getDesc())));
-      $response->send();
+    $matches = \model\Post::getMatchPosts();
+    $m1 = $matches[0];
+    $m2 = $matches[1];
+    $response = new \view\Response('json', NULL, array("id1" => $m1->getId(), "title1" => $m1->getTitle(), "description1" => PostController::baliseFromDescription($m1->getDesc()), "id2" => $m2->getId(), "title2" => $m2->getTitle(), "description2" => PostController::baliseFromDescription($m1->getDesc())));
+    $response->send();
   }
 
   public function winner($postID) {
-    echo "Winner is " . $postID;
+    \Database::call('POST_WIN', [$postID]);
   }
 
   public function like($postID){

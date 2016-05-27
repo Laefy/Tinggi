@@ -10,8 +10,7 @@ class Accessor {
     }
 
     public static function post($element, $type) {
-      if(isset($_POST[$element]))
-      {
+      if(isset($_POST[$element])) {
         return $_POST[$element];
       }
       return '';

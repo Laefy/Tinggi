@@ -17,7 +17,7 @@
           <div class="col-md-4 col-md-offset-4 text-center">
             <form method="post" action="<?=Router::$ROOT?>signin/valid">
               <div class="form-group">
-                <input type="login" name="login" class="form-control" id="login" placeholder="email">
+                <input type="login" name="login" class="form-control" id="login" placeholder="login ou email">
               </div>
               <div class="form-group">
                 <input type="password" name="password" class="form-control" id="password" placeholder="mot de passe">

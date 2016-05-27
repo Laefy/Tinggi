@@ -4,6 +4,7 @@
             <div class="col-lg-12">
                 <div class="intro-text">
                   <h4 class="name"><?= $data['post']->getTitle() ?></h4>
+                  <strong><?= $data['post']->getAuthor()->getLogin().'  -  '.$data['post']->getTime().' '?> <?= $data['post']->getScore() ?></strong><br />
                   <span class="desc"><?= \controller\PostController::makeBaliseFromDesc($data['post']->getDesc()) ?></span>
                 </div>
             </div>
@@ -22,7 +23,7 @@
             </a>
           </div>
           <div class="media-body">
-            <h6 class="media-heading"><?= $comment->getAuthor()->getLogin().' '.$comment->getFormatTime() ?></h6>
+            <h6 class="media-heading"><?= $comment->getAuthor()->getLogin().' '.$comment->getTime() ?></h6>
             <?= $comment->getDesc() ?>
           </div>
         </div>

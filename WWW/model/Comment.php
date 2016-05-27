@@ -48,9 +48,6 @@ class Comment {
     return $this->time;
   }
 
-  public function getFormatTime() {
-    return 'Le '.date('d/m/Y', $this->time).' &agrave; '.date('H:i:s', $this->time);
-  }
   public function getAuthor(){
     return $this->author;
   }

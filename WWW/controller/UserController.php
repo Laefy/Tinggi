@@ -62,27 +62,40 @@ class UserController extends Controller{
         array_push($errors,"Vous êtes un robot ! :/");
     }
 
-    $error = !empty($errors);
-
-    if(!$error)
-    {
-      // Enregistrer l'utilisateur dans la BDD //
+    if(empty($errors)) {
       $img = \Accessor::post("img", "file");
-      if(!$img)
-      {
+      if(!$img) {
         $img = 'default.png';
       }
-      $new_user = new \model\User(\Accessor::post("email", "string"), \Accessor::post("login", "string"), $img, 0);
-      $new_user->save();
-      $new_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
-      var_dump(\model\User::getByLogin($new_user->getLogin()));
-      exit();
-      // Enregistrer l'utilisateur dans la session //
-      \Session::signIn(\model\User::getByLogin($new_user->getLogin()));
-      $response = new \view\Response('redirect', '');
-      $response->send();
+
+      $mail = \Accessor::post("email", "string");
+      $login = \Accessor::post("login", "string");
+
+      // Check that the user is not already in the database.
+      if (\model\User::getByLogin($login) != NULL) {
+          echo 'prout';
+          array_push($errors, "Le login est déjà utilisé.");
+      } 
+
+      if (\model\User::getByMail($mail) != NULL) {
+          array_push($errors, "L'adresse mail est déjà utilisée.");
+      }
+
+      if (empty($errors)) {
+        $new_user = new \model\User($mail, $login, $img);
+        $new_user->save();
+        $new_user->setPassword(\Session::encrypt(\Accessor::post("password", "string")));
+    //    var_dump(\model\User::getByLogin($new_user->getLogin()));
+    //    exit();
+
+        // Enregistrer l'utilisateur dans la session //
+        \Session::signIn(\model\User::getByLogin($new_user->getLogin()));
+        $response = new \view\Response('redirect', '');
+        $response->send();
+      }
     }
-    $datas = array("error" => $error, "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
+
+    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
     $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", $datas);
     $renderer->render();
   }

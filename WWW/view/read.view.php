@@ -3,18 +3,20 @@
         <div class="row">
           <div id="all_like">
             <img src="../data/img/crown.png" alt="Match" class="crown"></img>
-            <div class="all_like">500</div>
+            <div class="all_like"><?= $data['post']->getScore() ?></div>
           </div>
             <div class="col-lg-12">
                 <div class="intro-text">
                   <h4 class="name"><?= $data['post']->getTitle() ?></h4>
-                  <strong><?= $data['post']->getAuthor()->getLogin().'  -  '.$data['post']->getTime().' '?> <?= $data['post']->getScore() ?></strong><br />
+                  <strong class="author_post"><?= $data['post']->getAuthor()->getLogin()?> </strong><?=',  '.$data['post']->getTime().' '?><br />
                   <span class="desc"><?= \controller\PostController::makeBaliseFromDesc($data['post']->getDesc()) ?></span>
+                  </div>
                 </div>
+
                 <div class="row">
                   <div class="col-md-6 col-md-offset-3 post-like">
                     <div class="like">
-                      <div class="nblike">500</div>
+                      <a class="nblike">500</a>
                     </div>
                     <div class="like">
                       <div class="like_hover">
@@ -25,7 +27,7 @@
                       </div>
                     </div>
                     <div class="like">
-                      <div class="nbdislike">50</div>
+                      <a class="nbdislike">50</a>
                     </div>
                     <div class="like">
                       <div class="like_hover">

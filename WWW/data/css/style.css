@@ -24,11 +24,10 @@ html {
 }
 .thumbnail iframe{
   width: 100%;
-  min-height: 300px;
+  min-height: 500px;
 }
 
 .thumbnail img{
-  max-height: 300px;
   width: inherit;
 }
 
@@ -81,9 +80,20 @@ html {
 }
 
 .nblike,.nbdislike{
+  display: inline-block;
   font-size:1.8em;
   padding:5px;
-  margin-top:25px;
+  padding-top:25px;
+  color:white;
+}
+.nblike:hover,.nbdislike:hover{
+  color:white;
+  text-decoration: none;
+}
+.author_post{
+  display: inline-block;
+  font-size: 1.2em;
+  padding-bottom: 30px;
 }
 .nbdislike{
   padding-left:20px;

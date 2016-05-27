@@ -31,8 +31,8 @@
 	Router::addRoute('post/send', 'controller\PostController', 'send');
 	Router::addRoute('post/(\d+)', 'controller\PostController', 'read');
 
-	Router::addRoute('post/toggleLike/(\d+)', 'controller\PostController', 'like');
-	Router::addRoute('post/toggleDislike/(\d+)', 'controller\PostController', 'dislike');
+	Router::addRoute('post/like/(\d+)', 'controller\PostController', 'like');
+	Router::addRoute('post/dislike/(\d+)', 'controller\PostController', 'dislike');
 
 	Router::addRoute('post/comment/(\d+)', 'controller\CommentController', 'send');
 

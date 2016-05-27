@@ -56,14 +56,14 @@ class PostController extends Controller{
   public function like($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleLike();
-    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response = new \view\Response("json",NULL,["user" => $post->getUserScore(), "likes" => $post->getLikes(), "dislikes" => $post->getDislikes()]);
     $response->send();
   }
 
   public function dislike($postID){
     $post = \model\Post::getPostById($postID);
     $post->toggleDislike();
-    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "global" => $post->getScore()]);
+    $response = new \view\Response("json",NULL,["user"=>$post->getUserScore(), "likes" => $post->getLikes(), "dislikes" => $post->getDislikes()]);
     $response->send();
   }
 

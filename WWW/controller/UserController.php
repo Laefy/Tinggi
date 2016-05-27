@@ -21,7 +21,7 @@ class UserController extends Controller{
   }
 
   public function signUp() {
-    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php',['title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new']);
+    $render = new \view\Renderer('Tinggy - Inscription', 'profile.view.php',['title' => 'Hey !', 'description' => 'rejoins-nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new']);
     $render->render();
   }
 
@@ -75,7 +75,7 @@ class UserController extends Controller{
       if (\model\User::getByLogin($login) != NULL) {
           echo 'prout';
           array_push($errors, "Le login est déjà utilisé.");
-      } 
+      }
 
       if (\model\User::getByMail($mail) != NULL) {
           array_push($errors, "L'adresse mail est déjà utilisée.");
@@ -95,7 +95,7 @@ class UserController extends Controller{
       }
     }
 
-    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
+    $datas = array("error" => !empty($errors), "errors" => $errors, 'title' => 'Hey !', 'description' => 'rejoins-nous on a des "cookies" !', 'action' => 'Créer', 'check' => 'signup/new');
     $renderer = new \view\Renderer('Tinggy - Inscription',"profile.view.php", $datas);
     $renderer->render();
   }

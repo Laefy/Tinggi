@@ -9,7 +9,7 @@
                 <div class="intro-text">
                   <h4 class="name"><?= $data['post']->getTitle() ?></h4>
                   <strong><?= $data['post']->getAuthor()->getLogin().'  -  '.$data['post']->getTime().' '?> <?= $data['post']->getScore() ?></strong><br />
-                  <span class="desc"><?= \controller\PostController::makeBaliseFromDesc($data['post']->getDesc()) ?></span>
+                  <span class="desc"><?= \controller\PostController::makeExplainedBaliseFromDesc($data['post']->getDesc()) ?></span>
                 </div>
                 <div class="row">
                   <div class="col-md-6 col-md-offset-3 post-like">
